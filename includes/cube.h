@@ -1,33 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/03 15:57:17 by tphung            #+#    #+#             */
-/*   Updated: 2021/01/30 13:53:05 by tphung           ###   ########.fr       */
+/*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
+/*   Updated: 2021/01/30 15:36:50 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef CUBE_H
+# define CUBE_H
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 #include "libft.h"
+#include "get_next_line.h"
 
-char		*ft_strdup(const char *s1)
+typedef struct		s_conf
 {
-	int		i;
-	int		j;
-	char	*res;
+	int				res_x;
+	int				res_y;
+	char			*no;
+	char			*so;
+	char			*we;
+	char			*ea;
+	char			*sprite;
+	int				floor_col;
+	int				ceil_col;
+	char			**map;
+}					t_conf;
 
-	i = ft_strlen(s1);
-	j = 0;
-	res = (char*)malloc(sizeof(char) * (i + 1));
-	if (!res)
-		return (NULL);
-	res[i] = '\0';
-	while (j < i)
-	{
-		res[j] = s1[j];
-		j++;
-	}
-	return (res);
-}
+#endif
