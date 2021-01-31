@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/01/31 14:05:58 by tphung           ###   ########.fr       */
+/*   Updated: 2021/01/31 18:41:10 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,40 @@ int					proc_resolution(t_conf *config)
 	return (0);
 }
 
+int					proc_textures(t_conf *config)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	line = *config->map;
+	if (line[i] == 'N' && line[i + 1] == 'O')
+	{
+		i += 2;
+		while (line[i++] == ' ') ;
+		config->no = &line[i];
+	}
+	else if (line[i] == 'S' && line[i + 1] == 'O')
+	{
+		i += 2;
+		while (line[i++] == ' ') ;
+		config->so = &line[i];
+	}
+	else if (line[i] == 'W' && line[i + 1] == 'E')
+	{
+		i += 2;
+		while (line[i++] == ' ') ;
+		config->we = &line[i];
+	}
+	else if (line[i++] == 'E' && line[i + 1] == 'A')
+	{
+		i += 2;
+		while (line[i++] == ' ') ;
+		config->ea = &line[i];
+	}
+	return (0);
+}
+
 int					parser(t_conf *config)
 {
 	char	**map;
@@ -141,7 +175,7 @@ int					parser(t_conf *config)
 	while (*config->map)
 	{
 		proc_resolution(config);
-//		proc_textures(config);
+		proc_textures(config);
 //		proc_colors(config);
 		config->map++;
 	}
@@ -151,14 +185,20 @@ int					parser(t_conf *config)
 int					main(int argc, char **argv)
 {
 	t_conf	config;
-
-
+	char	**map;
+	
 	if (argc == 2)
 		config.map = ft_open_file(argv[1]);
 	else
 		printf("SHit!\n");
+	map = config.map;
 	parser(&config);
 	printf("res_x = %i\n", config.res_x);
 	printf("res_y = %i\n", config.res_y);
+	printf("NO texture = %s\n", config.no);
+
+	printf("\nMAP_FILE:\n");
+	while (*map != 0)
+		printf("%s\n", *map++);
 	return (0);
 }
