@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/01/30 15:36:47 by tphung           ###   ########.fr       */
+/*   Updated: 2021/01/31 14:05:58 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,28 +106,46 @@ char				**ft_open_file(char *file)
 	err_exit(0);
 	list = gnl_to_list(fd);
 	map = list_to_map(list);
-	while (*map != 0)
-	{
-		ft_putstr((void*)(*map));
-		map++;
-	}
 	err_exit(0);
 	close(fd);
 	return (map);
 }
 
-int					parser(t_conf *config)
+int					proc_resolution(t_conf *config)
 {
-	char	**map;
+	char	*line;
 	int		i;
 
 	i = 0;
-	map = config->map;
-	while (*config->map != 0)
+	line = *config->map;
+	if (line[i++] != 'R')
+		return(0);
+	else
 	{
-		i++;
+		printf("Line: %s\n", &line[i]);
+		while(line[i] == ' ')
+			i++;
+		config->res_x = ft_atoi(&line[i]);
+		while(ft_isdigit(line[i]))
+			i++;
+		config->res_y = ft_atoi(&line[i]);
 	}
-	return (i);
+	return (0);
+}
+
+int					parser(t_conf *config)
+{
+	char	**map;
+
+	map = config->map;
+	while (*config->map)
+	{
+		proc_resolution(config);
+//		proc_textures(config);
+//		proc_colors(config);
+		config->map++;
+	}
+	return (0);
 }
 
 int					main(int argc, char **argv)
@@ -140,5 +158,7 @@ int					main(int argc, char **argv)
 	else
 		printf("SHit!\n");
 	parser(&config);
+	printf("res_x = %i\n", config.res_x);
+	printf("res_y = %i\n", config.res_y);
 	return (0);
 }
