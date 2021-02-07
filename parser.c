@@ -122,7 +122,6 @@ int					proc_resolution(t_conf *config)
 		return(0);
 	else
 	{
-		printf("Line: %s\n", &line[i]);
 		while(line[i] == ' ')
 			i++;
 		config->res_x = ft_atoi(&line[i]);
@@ -136,34 +135,55 @@ int					proc_resolution(t_conf *config)
 int					proc_textures(t_conf *config)
 {
 	char	*line;
+	char	**tmp;
 	int		i;
 
 	i = 0;
 	line = *config->map;
 	if (line[i] == 'N' && line[i + 1] == 'O')
-	{
-		i += 2;
-		while (line[i++] == ' ') ;
-		config->no = &line[i];
-	}
+		tmp = &config->no;
 	else if (line[i] == 'S' && line[i + 1] == 'O')
-	{
-		i += 2;
-		while (line[i++] == ' ') ;
-		config->so = &line[i];
-	}
+		tmp = &config->so;
 	else if (line[i] == 'W' && line[i + 1] == 'E')
+		tmp = &config->we;
+	else if (line[i] == 'E' && line[i + 1] == 'A')
+		tmp = &config->ea;
+	else if (line[i] == 'S' && line[i + 1] == ' ')
+		tmp = &config->sprite;
+	else
+		return (0);
+	i += 2;
+	while (line[i++] == ' ') ;
+	*tmp = &line[--i];
+	tmp = NULL;
+	return (0);
+}
+
+int					proc_colors(t_conf *config)
+{
+	char			*line;
+	unsigned int	*tmp;
+	int				i;
+
+	i = 0;
+	line = *config->map;
+	if (line[i] == 'F' && line[i + 1] == ' ')
+		tmp = &config->floor_col;
+	else if (line[i] == 'C' && line[i + 1] == ' ')
+		tmp = &config->ceil_col;
+	else
+		return (0);
+	while (line[i++] != '\0')
 	{
-		i += 2;
-		while (line[i++] == ' ') ;
-		config->we = &line[i];
+		if (ft_isdigit(line[i]) > 0)
+		{
+			*tmp = *tmp << 8;
+			*tmp = *tmp + ft_atoi(&line[i]);
+			while (ft_isdigit(line[i]) > 0)
+				i++;
+		}
 	}
-	else if (line[i++] == 'E' && line[i + 1] == 'A')
-	{
-		i += 2;
-		while (line[i++] == ' ') ;
-		config->ea = &line[i];
-	}
+	tmp = NULL;
 	return (0);
 }
 
@@ -176,7 +196,7 @@ int					parser(t_conf *config)
 	{
 		proc_resolution(config);
 		proc_textures(config);
-//		proc_colors(config);
+		proc_colors(config);
 		config->map++;
 	}
 	return (0);
@@ -196,6 +216,12 @@ int					main(int argc, char **argv)
 	printf("res_x = %i\n", config.res_x);
 	printf("res_y = %i\n", config.res_y);
 	printf("NO texture = %s\n", config.no);
+	printf("SO texture = %s\n", config.so);
+	printf("WE texture = %s\n", config.we);
+	printf("EA texture = %s\n", config.ea);
+	printf("Sprite texture = %s\n", config.sprite);
+	printf("ceil color = %u\n", config.ceil_col);
+	printf("floor color = %u\n", config.floor_col);
 
 	printf("\nMAP_FILE:\n");
 	while (*map != 0)
