@@ -31,8 +31,8 @@ typedef struct		s_conf
 	char			*we;
 	char			*ea;
 	char			*sprite;
-	int				floor_col;
-	int				ceil_col;
+	unsigned int	floor_col;
+	unsigned int	ceil_col;
 	char			**map;
 }					t_conf;
 
