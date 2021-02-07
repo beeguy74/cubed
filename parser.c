@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/01/31 18:41:10 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/07 14:16:24 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,19 @@ int					proc_colors(t_conf *config)
 	return (0);
 }
 
+int					proc_map(t_conf *config)
+{
+	int 			i;
+
+	i = 0;
+	if (ft_isdigit(*config->map[i]) > 0)
+	{
+		config->link_map = config->map;
+		return (1);
+	}
+	return (0);
+}
+
 int					parser(t_conf *config)
 {
 	char	**map;
@@ -197,6 +210,8 @@ int					parser(t_conf *config)
 		proc_resolution(config);
 		proc_textures(config);
 		proc_colors(config);
+		if (proc_map(config))
+			return (1);
 		config->map++;
 	}
 	return (0);
@@ -213,6 +228,7 @@ int					main(int argc, char **argv)
 		printf("SHit!\n");
 	map = config.map;
 	parser(&config);
+	check_map(config.link_map);
 	printf("res_x = %i\n", config.res_x);
 	printf("res_y = %i\n", config.res_y);
 	printf("NO texture = %s\n", config.no);
@@ -224,7 +240,7 @@ int					main(int argc, char **argv)
 	printf("floor color = %u\n", config.floor_col);
 
 	printf("\nMAP_FILE:\n");
-	while (*map != 0)
-		printf("%s\n", *map++);
+	while (*config.link_map != 0)
+		printf("%s\n", *config.link_map++);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/01/31 18:41:49 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/07 14:52:23 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ typedef struct		s_conf
 	unsigned int	floor_col;
 	unsigned int	ceil_col;
 	char			**map;
+	char			**link_map;
 }					t_conf;
+
+int					flood_fill(char **map, int x, int y);
+int					check_map(char **map);
 
 #endif
