@@ -6,7 +6,7 @@
 #    By: tphung <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/19 18:37:57 by tphung            #+#    #+#              #
-#    Updated: 2021/01/25 19:56:08 by tphung           ###   ########.fr        #
+#    Updated: 2021/02/16 19:40:01 by tphung           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ FLAGS = -c -Wall -Wextra -Werror
 AR = ar
 ARFLAGS = rcs
 
-SRCS = pixel.c
+SRCS = parser.c pixel.c find_player.c flood_map.c srcs/get_next_line.c\
+	   srcs/get_next_line_utils.c
 OBJ = $(SRCS:.c=.o)
 NAME = cub3d
 LIBFT = libft.a
@@ -33,10 +34,10 @@ $(NAME): $(OBJ)
 		make -C $(MLX_DIR)
 		cp $(LIBFT_DIR)$(LIBFT) .
 		cp $(MLX_DIR)$(MLX) .
-		$(CC) -Lmlx -lmlx -framework OpenGL -framework AppKit $(OBJ) -o $(NAME)
+		$(CC) -Lmlx -lmlx -framework OpenGL -framework AppKit $(OBJ) $(LIBFT) -o $(NAME) -I $(INCLUDES)
 
 .c.o: 
-		gcc $(FLAGS) -Imlx $< -o $@
+		gcc $(FLAGS) -Imlx $< -o $@ -I $(INCLUDES)
 
 clean:
 		rm -rf $(OBJ)

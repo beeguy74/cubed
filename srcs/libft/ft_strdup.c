@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 15:57:17 by tphung            #+#    #+#             */
-/*   Updated: 2021/01/30 13:53:05 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/16 16:19:36 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char		*ft_strdup(const char *s1)
 	if (!res)
 		return (NULL);
 	res[i] = '\0';
-	while (j < i)
+	while (j <= i)
 	{
 		res[j] = s1[j];
 		j++;

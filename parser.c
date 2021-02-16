@@ -6,11 +6,12 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/16 14:04:05 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/16 20:05:14 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
+#include "includes/libft.h"
 
 void				ft_putstr(void *data)
 {
@@ -30,6 +31,7 @@ void				err_exit(int err)
 	char	*msg;
 	char	*msg_errno;
 
+	msg_errno = NULL;
 	msg = "Error";
 	if (errno == 0 && err == 0)
 		return ;
@@ -119,13 +121,13 @@ int					proc_resolution(t_conf *config)
 	i = 0;
 	line = *config->map;
 	if (line[i++] != 'R')
-		return(0);
+		return (0);
 	else
 	{
-		while(line[i] == ' ')
+		while (line[i] == ' ')
 			i++;
 		config->res_x = ft_atoi(&line[i]);
-		while(ft_isdigit(line[i]))
+		while (ft_isdigit(line[i]))
 			i++;
 		config->res_y = ft_atoi(&line[i]);
 	}
@@ -153,7 +155,8 @@ int					proc_textures(t_conf *config)
 	else
 		return (0);
 	i += 2;
-	while (line[i++] == ' ') ;
+	while (line[i++] == ' ')
+		;
 	*tmp = &line[--i];
 	tmp = NULL;
 	return (0);
@@ -189,7 +192,7 @@ int					proc_colors(t_conf *config)
 
 int					proc_map(t_conf *config)
 {
-	int 			i;
+	int	i;
 
 	i = 0;
 	if (ft_isdigit(*config->map[i]) > 0)
@@ -211,36 +214,32 @@ int					parser(t_conf *config)
 		proc_textures(config);
 		proc_colors(config);
 		if (proc_map(config))
-			return (1);
+			return (0);
 		config->map++;
 	}
-	return (0);
+	return (1);
 }
 
 int					main(int argc, char **argv)
 {
 	t_conf	config;
+	t_pers	plr;
 	char	**map;
-	
+	int		flag;
+
+	flag = 0;
+	errno = 0;
 	if (argc == 2)
+	{
 		config.map = ft_open_file(argv[1]);
+	}
 	else
 		printf("SHit!\n");
 	map = config.map;
-	parser(&config);
-	//check_map(config.link_map);
-	printf("res_x = %i\n", config.res_x);
-	printf("res_y = %i\n", config.res_y);
-	printf("NO texture = %s\n", config.no);
-	printf("SO texture = %s\n", config.so);
-	printf("WE texture = %s\n", config.we);
-	printf("EA texture = %s\n", config.ea);
-	printf("Sprite texture = %s\n", config.sprite);
-	printf("ceil color = %u\n", config.ceil_col);
-	printf("floor color = %u\n", config.floor_col);
+	flag += parser(&config);
+	flag += find_plr(&plr, config.link_map);
+	flag += check_map(config.link_map, &plr);
 
-	printf("\nMAP_FILE:\n");
-	while (*config.link_map != 0)
-		printf("%s\n", *config.link_map++);
+	painting(&config, &plr);
 	return (0);
 }
