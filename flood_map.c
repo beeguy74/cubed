@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 13:36:08 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/07 14:56:43 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/16 14:04:08 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,16 @@
 
 int		flood_fill(char **map, int x, int y)
 {
-	int flag;
-
-	flag = 0;
-	if (map[y] == NULL)
-		return (1);
-	else if (map[y][x] == '\0')
-		return (1);
-	else if (map[y][x] != '0' && map[y][x] != 'N')
+	if (map[y][x] == '5' || map[y][x] == '1')
 		return (0);
-	map[y][x] = '5';
-	if (x != 0 && y != 0)
-	{
-		flag += flood_fill(map, x + 1, y);
-		flag += flood_fill(map, x - 1, y);
-		flag += flood_fill(map, x, y + 1);
-		flag += flood_fill(map, x, y - 1);
-	}
-	return (flag);
+	if (!ft_strchr("02", map[y][x]))
+		return (1);
+	else
+		map[y][x] = '5';
+	return (flood_fill(map, x + 1, y) || 
+			flood_fill(map, x - 1, y) ||
+			flood_fill(map, x, y + 1) ||
+			flood_fill(map, x, y - 1));
 }
 
 int		check_map(char **map)
@@ -50,6 +42,7 @@ int		check_map(char **map)
 			if (map[y][x] == 'N')
 			{
 				printf("\nFIND N\n x : %i y : %i \n", x, y);
+				map[y][x] = 0;
 				flag = flood_fill(map, x, y);
 				break ;
 			}

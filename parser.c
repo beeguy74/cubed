@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/07 14:16:24 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/16 14:04:05 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ int					main(int argc, char **argv)
 		printf("SHit!\n");
 	map = config.map;
 	parser(&config);
-	check_map(config.link_map);
+	//check_map(config.link_map);
 	printf("res_x = %i\n", config.res_x);
 	printf("res_y = %i\n", config.res_y);
 	printf("NO texture = %s\n", config.no);
