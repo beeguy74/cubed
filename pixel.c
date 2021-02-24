@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/17 18:48:00 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/20 17:32:33 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void			line_put(t_data *img, int x0, int y0, int x1, int y1)
 	}
 }
 
-int				key_hook(int keycode, t_vars *vars)
+/*int				key_hook(int keycode, t_vars *vars)
 {
 	printf("the key_code is %d\n", keycode);
 	if (vars)
@@ -66,19 +66,21 @@ int				mouse_hook(int button, int x, int y, t_vars *vars)
 	else
 		return (0);
 }
-
-void			square_put(t_data *img, int x, int y, int len)
+*/
+void			square_put(t_data *img, t_point *point, int len, int color)
 {
 	int			i;
 	int			j;
 
 	i = 0;
+	len = (len > 0) ? len : 1;
 	while (i < len)
 	{
 		j = 0;
 		while (j < len)
 		{
-			my_mlx_pixel_put(img, x + i, y + j, 0x00FF0000);
+			my_mlx_pixel_put(img, point->x * SCALE + i,
+					point->y * SCALE + j, color);
 			j++;
 		}
 		i++;
@@ -87,31 +89,54 @@ void			square_put(t_data *img, int x, int y, int len)
 
 int				drow_map(t_vars *vars)
 {
-	vars->y = 0;
-	while (vars->config->link_map[vars->y] != NULL)
+	t_point	point;
+
+	point.y = 0;
+	while (vars->config->link_map[point.y] != NULL)
 	{
-		vars->x = 0;
-		while (vars->config->link_map[vars->y][vars->x] != '\0')
+		point.x = 0;
+		while (vars->config->link_map[point.y][point.x] != '\0')
 		{
-			if (vars->config->link_map[vars->y][vars->x] == '1')
-				square_put(vars->img, vars->x * 10, vars->y * 10, 10);
-			if (ft_strchr("0", vars->config->link_map[vars->y][vars->x]))
-				square_put(vars->img, vars->x * 10, vars->y * 10, 10);
-			vars->x++;
+			if (vars->config->link_map[point.y][point.x] == '1')
+				square_put(vars->img, &point, 10, 0x00FF0000);
+			if (ft_strchr("02SNWE", vars->config->link_map[point.y][point.x]))
+				square_put(vars->img, &point, 10, 0x0000FF00);
+			point.x++;
 		}
-		vars->y++;
+		point.y++;
 	}
+	return (0);
+}
+
+int				drow_plr(t_vars *vars)
+{
+	t_point	point;
+
+	point.y = (int)(vars->plr->pos.y * SCALE) + SCALE / 2;
+	point.x = (int)(vars->plr->pos.x * SCALE) + SCALE / 2;
+	//point.y = (int)vars->plr->pos.y;
+	//point.x = (int)vars->plr->pos.x;
+	//square_put(vars->img, &point, 2, 0x000000FF);
+	my_mlx_pixel_put(vars->img, point.x, point.y, 0x000000FF);
 	return (0);
 }
 
 int				render_next_frame(t_vars *vars)
 {
-/*	square_put(vars->img, vars->x, vars->y, 64);
-	if (vars->x < vars->config->res_x)
-		vars->x += 64;*/
 	drow_map(vars);
+	drow_plr(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 0);
 	return (1);
+}
+
+int				win_close(int keycode, t_vars *vars)
+{
+	if (keycode == 53)
+	{
+		mlx_destroy_window(vars->mlx, vars->win);
+		exit(0);
+	}
+	return (0);
 }
 
 int				painting(t_conf *config, t_pers *plr)
@@ -119,24 +144,17 @@ int				painting(t_conf *config, t_pers *plr)
 	t_vars		vars;
 	t_data		img;
 
-	vars.config = config;
-	vars.plr = plr;
-	vars.x = 0;
-	vars.y = 0;
-	vars.x1 = 64;
-	vars.y1 = 64;
-
-	vars.img = &img;
-	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, config->res_y, config->res_x,
+	vars = (t_vars){.config = config, .plr = plr, .img = &img,
+		.mlx = mlx_init()};
+	vars.win = mlx_new_window(vars.mlx, config->res_x, config->res_y,
 			"Hello world map!");
-	vars.img->img = mlx_new_image(vars.mlx, config->res_y, config->res_x);
+	vars.img->img = mlx_new_image(vars.mlx, config->res_x, config->res_y);
 	vars.img->addr = mlx_get_data_addr(vars.img->img, &vars.img->bits_per_pixel,
 			&vars.img->line_length, &vars.img->endian);
 
-	mlx_key_hook(vars.win, key_hook, &vars);
+	//mlx_key_hook(vars.win, key_hook, &vars);
+	mlx_hook(vars.win, 2, 1L<<0, win_close, &vars);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_loop(vars.mlx);
 	return (0);
 }
-

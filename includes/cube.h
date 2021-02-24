@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/16 19:29:08 by tphung           ###   ########.fr       */
+/*   Updated: 2021/02/20 13:53:53 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,19 @@
 #include <math.h>
 #include "get_next_line.h"
 
+# define SCALE 10
+
 typedef struct		s_vect
 {
 	float			y;
 	float			x;
 }					t_vect;
+
+typedef struct		s_point
+{
+	int				y;
+	int				x;
+}					t_point;
 
 typedef struct		s_pers
 {
@@ -46,19 +54,19 @@ typedef struct		s_conf
 	char			*we;
 	char			*ea;
 	char			*sprite;
-	unsigned int	floor_col;
-	unsigned int	ceil_col;
 	char			**map;
 	char			**link_map;
+	unsigned int	floor_col;
+	unsigned int	ceil_col;
 }					t_conf;
 
 typedef	struct	s_data
 {
-	void		*img;
 	char		*addr;
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;
+	void		*img;
 }				t_data;
 
 typedef struct	s_vars
@@ -66,10 +74,6 @@ typedef struct	s_vars
 	void		*mlx;
 	void		*win;
 	t_data		*img;
-	int			x;
-	int			y;
-	int			x1;
-	int			y1;
 	t_conf		*config;
 	t_pers		*plr;
 }				t_vars;
