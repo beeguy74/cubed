@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/20 17:32:33 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/04 17:23:14 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,6 @@ int				drow_plr(t_vars *vars)
 
 	point.y = (int)(vars->plr->pos.y * SCALE) + SCALE / 2;
 	point.x = (int)(vars->plr->pos.x * SCALE) + SCALE / 2;
-	//point.y = (int)vars->plr->pos.y;
-	//point.x = (int)vars->plr->pos.x;
-	//square_put(vars->img, &point, 2, 0x000000FF);
 	my_mlx_pixel_put(vars->img, point.x, point.y, 0x000000FF);
 	return (0);
 }
@@ -129,13 +126,32 @@ int				render_next_frame(t_vars *vars)
 	return (1);
 }
 
-int				win_close(int keycode, t_vars *vars)
+int				win_close(t_vars *vars)
 {
-	if (keycode == 53)
+	mlx_destroy_window(vars->mlx, vars->win);
+	exit(0);
+	return (0);
+}
+
+int				plr_move(int keycode, t_vars *vars)
+{
+	if (keycode == 126)
 	{
-		mlx_destroy_window(vars->mlx, vars->win);
-		exit(0);
+		vars->plr->pos.y -= 0.2;
 	}
+	if (keycode == 125)
+	{
+		vars->plr->pos.y += 0.2;
+	}
+	return (0);
+}
+
+int				key_events(int keycode, t_vars *vars)
+{
+	if (keycode > 122 && keycode < 127)
+		plr_move(keycode, vars);
+	if (keycode == 53)
+		win_close(vars);
 	return (0);
 }
 
@@ -153,7 +169,8 @@ int				painting(t_conf *config, t_pers *plr)
 			&vars.img->line_length, &vars.img->endian);
 
 	//mlx_key_hook(vars.win, key_hook, &vars);
-	mlx_hook(vars.win, 2, 1L<<0, win_close, &vars);
+	//mlx_hook(vars.win, 2, 1L<<0, win_close, &vars);
+	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_loop(vars.mlx);
 	return (0);
