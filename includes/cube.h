@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/02/20 13:53:53 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/07 14:38:55 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 
 typedef struct		s_vect
 {
-	float			y;
-	float			x;
+	double			y;
+	double			x;
 }					t_vect;
 
 typedef struct		s_point
@@ -44,6 +44,17 @@ typedef struct		s_pers
 	t_vect			sight;
 	t_vect			cam;
 }					t_pers;
+
+typedef struct		s_rays
+{
+	t_vect			dir;
+	t_vect			delta;
+	t_vect			side;
+	t_point			step;
+	t_point			map;
+	int				hit_side;
+	int				hit;
+}					t_rays;
 
 typedef struct		s_conf
 {
@@ -82,6 +93,7 @@ int					flood_fill(char **map, int x, int y);
 int					check_map(char **map, t_pers *plr);
 int					find_plr(t_pers *plr, char **map);
 int					painting(t_conf *config, t_pers *plr);
+int					raycast(t_vars *vars);
 void				err_exit(int err);
 
 #endif

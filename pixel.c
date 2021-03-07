@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/04 17:23:14 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/07 17:11:11 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ int				painting(t_conf *config, t_pers *plr)
 
 	//mlx_key_hook(vars.win, key_hook, &vars);
 	//mlx_hook(vars.win, 2, 1L<<0, win_close, &vars);
+	raycast(&vars);
 	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_loop(vars.mlx);

@@ -6,7 +6,7 @@
 #    By: tphung <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/19 18:37:57 by tphung            #+#    #+#              #
-#    Updated: 2021/02/16 19:40:01 by tphung           ###   ########.fr        #
+#    Updated: 2021/03/07 11:40:40 by tphung           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ FLAGS = -c -Wall -Wextra -Werror
 AR = ar
 ARFLAGS = rcs
 
-SRCS = parser.c pixel.c find_player.c flood_map.c srcs/get_next_line.c\
-	   srcs/get_next_line_utils.c
+SRCS = parser.c pixel.c find_player.c flood_map.c raycast.c\
+	   srcs/get_next_line.c srcs/get_next_line_utils.c
 OBJ = $(SRCS:.c=.o)
 NAME = cub3d
 LIBFT = libft.a
