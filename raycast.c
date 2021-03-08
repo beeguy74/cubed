@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/07 17:17:53 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/08 14:37:04 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,36 +62,39 @@ int		ray_side_calc(t_rays *ray, t_pers *plr)
 		return (0);
 }
 
-int		digital_diff_analys(t_rays *ray)//, char **map)
+int		digital_diff_analys(t_rays *ray, char **map)
 {
-	printf("posX= %d posY= %d", ray->map.x, ray->map.y);
-	/*
-	while (ray->hit == 0 && ray->map.y < 1920)
+	//printf("%c\n", map[ray.map.y][ray.map.x]);
+	//printf("posX= %d posY= %d", ray->map.x, ray->map.y);
+	while (ray->hit == 0)
+	{
+		//jump to next map square, OR in x-direction, OR in y-direction
+		if(ray->side.x < ray->side.y)
 		{
-			//jump to next map square, OR in x-direction, OR in y-direction
-			if(ray->side.x < ray->side.y)
-			{
-				ray->side.x += ray->delta.x;
-				ray->map.x += ray->step.x;
-				ray->hit_side = 0;
-				//sideDistX += deltaDistX;
-				//mapX += stepX;
-				//side = 0;
-			}
-			else
-			{
-				ray->side.y += ray->delta.y;
-				ray->map.y += ray->step.y;
-				ray->hit_side = 1;
-				//sideDistY += deltaDistY;
-				//mapY += stepY;
-				//side = 1;
-			}
-			//Check if ray has hit a wall
-			//if(worldMap[mapX][mapY] > 0) hit = 1;
-	//		if (map[ray->map.y][ray->map.x] == 1)
-	//			ray->hit = 1;
-		}*/
+			ray->side.x += ray->delta.x;
+			ray->map.x += ray->step.x;
+			ray->hit_side = 0;
+			//sideDistX += deltaDistX;
+			//mapX += stepX;
+			//side = 0;
+		}
+		else
+		{
+			ray->side.y += ray->delta.y;
+			ray->map.y += ray->step.y;
+			ray->hit_side = 1;
+			//sideDistY += deltaDistY;
+			//mapY += stepY;
+			//side = 1;
+		}
+		//Check if ray has hit a wall
+		//if(worldMap[mapX][mapY] > 0) hit = 1;
+		if (map[ray->map.y][ray->map.x] == '1')
+		{
+			//printf("posX= %d posY= %d", ray->map.x, ray->map.y);
+			ray->hit = 1;
+		}
+	}
 	return (0);
 }
 
@@ -138,7 +141,8 @@ int		raycast(t_vars *vars)
 /*
 		//perform DDA
 			*/
-		digital_diff_analys(&ray);//, vars->config->link_map);
+		
+		digital_diff_analys(&ray, vars->config->link_map);
 		/*
 		//Calculate distance projected on camera direction
 		//(Euclidean distance will give fisheye effect!)
