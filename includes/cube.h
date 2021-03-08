@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/07 14:38:55 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/08 18:49:09 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,11 @@ typedef struct	s_vars
 	t_data		*img;
 	t_conf		*config;
 	t_pers		*plr;
+	t_rays		*ray;
 }				t_vars;
 
+void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void				line_put(t_data *img, int x0, int y0, int x1, int y1);
 int					flood_fill(char **map, int x, int y);
 int					check_map(char **map, t_pers *plr);
 int					find_plr(t_pers *plr, char **map);

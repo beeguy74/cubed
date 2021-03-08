@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/07 17:11:11 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/08 18:49:48 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void			line_put(t_data *img, int x0, int y0, int x1, int y1)
 		diry = -1;
 	while (x0 < x1)
 	{
-		my_mlx_pixel_put(img, x0, y0, 0x00FF0000);
+		my_mlx_pixel_put(img, x0, y0, 0x00000FFF);
 		error = error + deltaerr;
 		if (error >= (deltax + 1))
 		{
@@ -112,8 +112,8 @@ int				drow_plr(t_vars *vars)
 {
 	t_point	point;
 
-	point.y = (int)(vars->plr->pos.y * SCALE) + SCALE / 2;
-	point.x = (int)(vars->plr->pos.x * SCALE) + SCALE / 2;
+	point.y = (int)(vars->plr->pos.y * SCALE);
+	point.x = (int)(vars->plr->pos.x * SCALE);
 	my_mlx_pixel_put(vars->img, point.x, point.y, 0x000000FF);
 	return (0);
 }
@@ -121,6 +121,7 @@ int				drow_plr(t_vars *vars)
 int				render_next_frame(t_vars *vars)
 {
 	drow_map(vars);
+	raycast(vars);
 	drow_plr(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 0);
 	return (1);
@@ -135,6 +136,7 @@ int				win_close(t_vars *vars)
 
 int				plr_move(int keycode, t_vars *vars)
 {
+	/*
 	if (keycode == 126)
 	{
 		vars->plr->pos.y -= 0.2;
@@ -143,13 +145,80 @@ int				plr_move(int keycode, t_vars *vars)
 	{
 		vars->plr->pos.y += 0.2;
 	}
+	*/
+    //move forward if no wall in front of you
+	double	m_speed;
+	char	**map;
+	
+	m_speed = 0.2;
+	map = vars->config->map;
+    //move backwards if no wall behind you
+	if (keycode == 125)
+    {
+      if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x -\
+				  vars->plr->sight.x * m_speed)] != '1')
+		  vars->plr->pos.x -= vars->plr->sight.x * m_speed;
+      if (map[(int)(vars->plr->pos.y - vars->plr->sight.y *\
+				  m_speed)][(int)(vars->plr->pos.x)] != '1')
+		  vars->plr->pos.y -= vars->plr->sight.y * m_speed;
+	}
+    //move forward if no wall behind you
+	if (keycode == 126)
+    {
+      if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x +\
+				  vars->plr->sight.x * m_speed)] != '1')
+		  vars->plr->pos.x += vars->plr->sight.x * m_speed;
+      if (map[(int)(vars->plr->pos.y + vars->plr->sight.y *\
+				  m_speed)][(int)(vars->plr->pos.x)] != '1')
+		  vars->plr->pos.y += vars->plr->sight.y * m_speed;
+    }
+	return (0);
+}
+
+int				plr_rotate(int keycode, t_vars *vars)
+{
+	double	old_sight_x;
+	double	old_cam_x;
+	double	r_speed;
+
+	r_speed = 0.1;
+	old_cam_x = vars->plr->cam.x;
+	old_sight_x = vars->plr->sight.x;
+    //rotate to the right
+    if (keycode == 123)
+    {
+      //both camera direction and camera plane must be rotated
+      vars->plr->sight.x = vars->plr->sight.x * cos(-r_speed)\
+						   - vars->plr->sight.y * sin(-r_speed);
+      vars->plr->sight.y = old_sight_x * sin(-r_speed)\
+						   + vars->plr->sight.y * cos(-r_speed);
+      vars->plr->cam.x = vars->plr->cam.x * cos(-r_speed)\
+						 - vars->plr->cam.y * sin(-r_speed);
+      vars->plr->cam.y = old_cam_x * sin(-r_speed)\
+						 + vars->plr->cam.y * cos(-r_speed);
+	}
+    //rotate to the left
+    if (keycode == 124)
+    {
+      //both camera direction and camera plane must be rotated
+      vars->plr->sight.x = vars->plr->sight.x * cos(r_speed)\
+						   - vars->plr->sight.y * sin(r_speed);
+      vars->plr->sight.y = old_sight_x * sin(r_speed)\
+						   + vars->plr->sight.y * cos(r_speed);
+      vars->plr->cam.x = vars->plr->cam.x * cos(r_speed)\
+						 - vars->plr->cam.y * sin(r_speed);
+      vars->plr->cam.y = old_cam_x * sin(r_speed)\
+						 + vars->plr->cam.y * cos(r_speed);
+    }
 	return (0);
 }
 
 int				key_events(int keycode, t_vars *vars)
 {
-	if (keycode > 122 && keycode < 127)
+	if (keycode > 124 && keycode < 127)
 		plr_move(keycode, vars);
+	if (keycode > 122 && keycode < 125)
+		plr_rotate(keycode, vars);
 	if (keycode == 53)
 		win_close(vars);
 	return (0);
@@ -170,9 +239,8 @@ int				painting(t_conf *config, t_pers *plr)
 
 	//mlx_key_hook(vars.win, key_hook, &vars);
 	//mlx_hook(vars.win, 2, 1L<<0, win_close, &vars);
-	raycast(&vars);
-	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
+	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
 	mlx_loop(vars.mlx);
 	return (0);
 }

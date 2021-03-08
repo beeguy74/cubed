@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/08 14:37:04 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/08 18:56:51 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,24 @@ int		ray_side_calc(t_rays *ray, t_pers *plr)
 		return (0);
 }
 
-int		digital_diff_analys(t_rays *ray, char **map)
+int		digital_diff_analys(t_rays *ray, char **map, t_data *img)
 {
 	//printf("%c\n", map[ray.map.y][ray.map.x]);
 	//printf("posX= %d posY= %d", ray->map.x, ray->map.y);
+	//t_point	point;
+	int		i;
+
 	while (ray->hit == 0)
 	{
+		i = 0;
+		//draw some shitty rays
+		/*while (i <= 6)
+		{
+			point.y = (int)(ray->map.y * SCALE + i);
+			point.x = (int)(ray->map.x * SCALE + i);
+			my_mlx_pixel_put(img, point.x, point.y, 0x000000FF);
+			i++;
+		}*/
 		//jump to next map square, OR in x-direction, OR in y-direction
 		if(ray->side.x < ray->side.y)
 		{
@@ -105,6 +117,7 @@ int		raycast(t_vars *vars)
 	t_rays	ray;
 
 	i = 0;
+	vars->ray = &ray;
 	while (i < vars->config->res_x)
 	{
 		x_cam = 2. * i / vars->config->res_x - 1;
@@ -142,7 +155,7 @@ int		raycast(t_vars *vars)
 		//perform DDA
 			*/
 		
-		digital_diff_analys(&ray, vars->config->link_map);
+		digital_diff_analys(&ray, vars->config->link_map, vars->img);
 		/*
 		//Calculate distance projected on camera direction
 		//(Euclidean distance will give fisheye effect!)
@@ -150,6 +163,32 @@ int		raycast(t_vars *vars)
 			perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
 		else
 			perpWallDist = (mapY - posY + (2 - stepY) / 2) / rayDirY;
+
+		//Calculate height of line to draw on screen
+      int lineHeight = (int)(h / perpWallDist);
+
+      //calculate lowest and highest pixel to fill in current stripe
+      int drawStart = -lineHeight / 2 + h / 2;
+      if(drawStart < 0)drawStart = 0;
+      int drawEnd = lineHeight / 2 + h / 2;
+      if(drawEnd >= h)drawEnd = h - 1;
+
+      //choose wall color
+      ColorRGB color;
+      switch(worldMap[mapX][mapY])
+      {
+        case 1:  color = RGB_Red;    break; //red
+        case 2:  color = RGB_Green;  break; //green
+        case 3:  color = RGB_Blue;   break; //blue
+        case 4:  color = RGB_White;  break; //white
+        default: color = RGB_Yellow; break; //yellow
+      }
+
+      //give x and y sides different brightness
+      if(side == 1) {color = color / 2;}
+
+      //draw the pixels of the stripe as a vertical line
+      verLine(x, drawStart, drawEnd, color);
 			*/
 		i++;
 	}
