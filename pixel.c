@@ -6,13 +6,14 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/08 18:49:48 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/18 16:29:58 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/cube.h"
 
-void			my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void			my_mlx_pixel_put(t_data *data, int x, int y,\
+		unsigned int color)
 {
 	char		*dst;
 
@@ -20,7 +21,8 @@ void			my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-void			line_put(t_data *img, int x0, int y0, int x1, int y1)
+void			line_put(t_data *img, t_point start, t_point end,\
+		unsigned int color)
 {
 	int		deltax = 0;
 	int		deltay = 0;
@@ -28,24 +30,24 @@ void			line_put(t_data *img, int x0, int y0, int x1, int y1)
 	int		error = 0;
 	int		deltaerr = 0;
 
-	diry = y1 - y0;
-	deltax = abs(x1 - x0);
-	deltay = abs(y1 - y0);
+	diry = end.y - start.y;
+	deltax = abs(end.x - start.x);
+	deltay = abs(end.y - start.y);
 	deltaerr = (deltay + 1);
 	if (diry > 0)
 		diry = 1;
 	if (diry < 0)
 		diry = -1;
-	while (x0 < x1)
+	while (start.x < end.x)
 	{
-		my_mlx_pixel_put(img, x0, y0, 0x00000FFF);
+		my_mlx_pixel_put(img, start.x, start.y, color);
 		error = error + deltaerr;
 		if (error >= (deltax + 1))
 		{
-			y0 = y0 + diry;
+			start.y = start.y + diry;
 			error = error - deltax;
 		}
-		x0++;
+		start.x++;
 	}
 }
 
@@ -118,12 +120,36 @@ int				drow_plr(t_vars *vars)
 	return (0);
 }
 
+void			floor_ceiling(t_vars *vars)
+{
+	int		i;
+	int		end;
+	int		*img;
+
+	i = 0;
+	img = (int *)vars->img->addr;
+	end = vars->img->line_length / 4 * vars->config->res_y / 2;
+	while (i < end)
+	{
+		img[i] = vars->config->ceil_col;
+		i++;
+	}
+	end *= 2;
+	while (i < end)
+	{
+		img[i] = vars->config->floor_col;
+		i++;
+	}
+}
+
 int				render_next_frame(t_vars *vars)
 {
-	drow_map(vars);
+	floor_ceiling(vars);
 	raycast(vars);
+	drow_map(vars);
 	drow_plr(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 0);
+	mlx_do_sync(vars->mlx);
 	return (1);
 }
 

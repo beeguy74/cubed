@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/08 18:49:09 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/18 14:56:28 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,14 @@ typedef struct		s_pers
 
 typedef struct		s_rays
 {
+	double			wall_dist;
 	t_vect			dir;
 	t_vect			delta;
 	t_vect			side;
 	t_point			step;
 	t_point			map;
+	t_point			line_start;
+	t_point			line_end;
 	int				hit_side;
 	int				hit;
 }					t_rays;
@@ -90,8 +93,10 @@ typedef struct	s_vars
 	t_rays		*ray;
 }				t_vars;
 
-void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void				line_put(t_data *img, int x0, int y0, int x1, int y1);
+void				my_mlx_pixel_put(t_data *data, int x, int y,\
+		unsigned int color);
+void				line_put(t_data *img, t_point start, t_point end,\
+		unsigned int color);
 int					flood_fill(char **map, int x, int y);
 int					check_map(char **map, t_pers *plr);
 int					find_plr(t_pers *plr, char **map);

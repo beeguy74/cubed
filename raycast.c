@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/08 18:56:51 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/18 16:13:40 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,20 @@ int		digital_diff_analys(t_rays *ray, char **map, t_data *img)
 {
 	//printf("%c\n", map[ray.map.y][ray.map.x]);
 	//printf("posX= %d posY= %d", ray->map.x, ray->map.y);
-	//t_point	point;
+	t_point	point;
 	int		i;
 
 	while (ray->hit == 0)
 	{
 		i = 0;
 		//draw some shitty rays
-		/*while (i <= 6)
+		while (i <= 6)
 		{
 			point.y = (int)(ray->map.y * SCALE + i);
 			point.x = (int)(ray->map.x * SCALE + i);
 			my_mlx_pixel_put(img, point.x, point.y, 0x000000FF);
 			i++;
-		}*/
+		}
 		//jump to next map square, OR in x-direction, OR in y-direction
 		if(ray->side.x < ray->side.y)
 		{
@@ -110,11 +110,46 @@ int		digital_diff_analys(t_rays *ray, char **map, t_data *img)
 	return (0);
 }
 
+int		vert_line_calc(t_rays *ray, t_pers *plr, int res_y)
+{
+	double	wall_dist;
+	int		line_height;
+
+	if (ray->hit_side == 0)
+		wall_dist = (ray->map.x - plr->pos.x +\
+				(1 - ray->step.x) / 2) / ray->dir.x;
+	else
+		wall_dist = (ray->map.y - plr->pos.y +\
+				(2 - ray->step.y) / 2) / ray->dir.y;
+
+	//Calculate height of line to draw on screen
+	line_height = (int)(res_y / wall_dist);
+
+	//calculate lowest and highest pixel to fill in current stripe
+	ray->line_start.y = -line_height / 2 + res_y / 2;
+	if(ray->line_start.y < 0)
+		ray->line_start.y = 0;
+	ray->line_end.y = line_height / 2 + res_y / 2;
+	if(ray->line_end.y >= res_y)
+		ray->line_end.y = res_y - 1;
+	return (0);
+}
+
+void	ver_line_put(t_data *img, t_point start, t_point end, unsigned int col)
+{
+	while (start.y < end.y)
+	{
+		my_mlx_pixel_put(img, start.x, start.y, col);
+		start.y++;
+	}
+}
+
 int		raycast(t_vars *vars)
 {
-	int		i;
-	double	x_cam;
-	t_rays	ray;
+	int				i;
+	unsigned int	wall_col;
+	double			x_cam;
+	t_rays			ray;
 
 	i = 0;
 	vars->ray = &ray;
@@ -172,7 +207,11 @@ int		raycast(t_vars *vars)
       if(drawStart < 0)drawStart = 0;
       int drawEnd = lineHeight / 2 + h / 2;
       if(drawEnd >= h)drawEnd = h - 1;
-
+	  */
+		ray.line_start.x = i;
+		ray.line_end.x = i;
+		vert_line_calc(&ray, vars->plr, vars->config->res_y);
+		/*
       //choose wall color
       ColorRGB color;
       switch(worldMap[mapX][mapY])
@@ -183,13 +222,15 @@ int		raycast(t_vars *vars)
         case 4:  color = RGB_White;  break; //white
         default: color = RGB_Yellow; break; //yellow
       }
-
+*/
       //give x and y sides different brightness
-      if(side == 1) {color = color / 2;}
+		wall_col = 0x004291FF;
+		if(ray.hit_side == 1)
+			wall_col = wall_col / 2;
 
       //draw the pixels of the stripe as a vertical line
-      verLine(x, drawStart, drawEnd, color);
-			*/
+		ver_line_put(vars->img, ray.line_start, ray.line_end, wall_col);
+	
 		i++;
 	}
 	return (0);
