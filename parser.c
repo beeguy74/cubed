@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/07 17:04:59 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/19 18:15:51 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,7 @@ int					main(int argc, char **argv)
 	flag += find_plr(&plr, config.link_map);
 	flag += check_map(config.link_map, &plr);
 
+	//printf("No text = %s\n", config.no);
 	painting(&config, &plr);
 	return (0);
 }

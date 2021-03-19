@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/18 16:29:58 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/19 20:00:38 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,6 @@ void			line_put(t_data *img, t_point start, t_point end,\
 	}
 }
 
-/*int				key_hook(int keycode, t_vars *vars)
-{
-	printf("the key_code is %d\n", keycode);
-	if (vars)
-		return (0);
-	else
-		return (0);
-}
-
-int				mouse_hook(int button, int x, int y, t_vars *vars)
-{
-	printf("mouse x is %d, y is %d\n", x, y);
-	if (vars && button)
-		return (0);
-	else
-		return (0);
-}
-*/
 void			square_put(t_data *img, t_point *point, int len, int color)
 {
 	int			i;
@@ -162,16 +144,6 @@ int				win_close(t_vars *vars)
 
 int				plr_move(int keycode, t_vars *vars)
 {
-	/*
-	if (keycode == 126)
-	{
-		vars->plr->pos.y -= 0.2;
-	}
-	if (keycode == 125)
-	{
-		vars->plr->pos.y += 0.2;
-	}
-	*/
     //move forward if no wall in front of you
 	double	m_speed;
 	char	**map;
@@ -201,40 +173,32 @@ int				plr_move(int keycode, t_vars *vars)
 	return (0);
 }
 
-int				plr_rotate(int keycode, t_vars *vars)
+int				plr_rotate(int keycode, t_pers *plr)
 {
 	double	old_sight_x;
 	double	old_cam_x;
-	double	r_speed;
+	double	speed;
 
-	r_speed = 0.1;
-	old_cam_x = vars->plr->cam.x;
-	old_sight_x = vars->plr->sight.x;
+	speed = 0.1;
+	old_cam_x = plr->cam.x;
+	old_sight_x = plr->sight.x;
     //rotate to the right
     if (keycode == 123)
     {
       //both camera direction and camera plane must be rotated
-      vars->plr->sight.x = vars->plr->sight.x * cos(-r_speed)\
-						   - vars->plr->sight.y * sin(-r_speed);
-      vars->plr->sight.y = old_sight_x * sin(-r_speed)\
-						   + vars->plr->sight.y * cos(-r_speed);
-      vars->plr->cam.x = vars->plr->cam.x * cos(-r_speed)\
-						 - vars->plr->cam.y * sin(-r_speed);
-      vars->plr->cam.y = old_cam_x * sin(-r_speed)\
-						 + vars->plr->cam.y * cos(-r_speed);
+      plr->sight.x = plr->sight.x * cos(-speed) - plr->sight.y * sin(-speed);
+      plr->sight.y = old_sight_x * sin(-speed) + plr->sight.y * cos(-speed);
+      plr->cam.x = plr->cam.x * cos(-speed) - plr->cam.y * sin(-speed);
+      plr->cam.y = old_cam_x * sin(-speed) + plr->cam.y * cos(-speed);
 	}
     //rotate to the left
     if (keycode == 124)
     {
       //both camera direction and camera plane must be rotated
-      vars->plr->sight.x = vars->plr->sight.x * cos(r_speed)\
-						   - vars->plr->sight.y * sin(r_speed);
-      vars->plr->sight.y = old_sight_x * sin(r_speed)\
-						   + vars->plr->sight.y * cos(r_speed);
-      vars->plr->cam.x = vars->plr->cam.x * cos(r_speed)\
-						 - vars->plr->cam.y * sin(r_speed);
-      vars->plr->cam.y = old_cam_x * sin(r_speed)\
-						 + vars->plr->cam.y * cos(r_speed);
+      plr->sight.x = plr->sight.x * cos(speed) - plr->sight.y * sin(speed);
+      plr->sight.y = old_sight_x * sin(speed) + plr->sight.y * cos(speed);
+      plr->cam.x = plr->cam.x * cos(speed) - plr->cam.y * sin(speed);
+      plr->cam.y = old_cam_x * sin(speed) + plr->cam.y * cos(speed);
     }
 	return (0);
 }
@@ -244,7 +208,7 @@ int				key_events(int keycode, t_vars *vars)
 	if (keycode > 124 && keycode < 127)
 		plr_move(keycode, vars);
 	if (keycode > 122 && keycode < 125)
-		plr_rotate(keycode, vars);
+		plr_rotate(keycode, vars->plr);
 	if (keycode == 53)
 		win_close(vars);
 	return (0);
@@ -254,6 +218,9 @@ int				painting(t_conf *config, t_pers *plr)
 {
 	t_vars		vars;
 	t_data		img;
+	//int			width;
+	//int			height;
+	//void		*text_img;
 
 	vars = (t_vars){.config = config, .plr = plr, .img = &img,
 		.mlx = mlx_init()};
@@ -263,8 +230,10 @@ int				painting(t_conf *config, t_pers *plr)
 	vars.img->addr = mlx_get_data_addr(vars.img->img, &vars.img->bits_per_pixel,
 			&vars.img->line_length, &vars.img->endian);
 
-	//mlx_key_hook(vars.win, key_hook, &vars);
-	//mlx_hook(vars.win, 2, 1L<<0, win_close, &vars);
+
+	//text_img = mlx_xpm_file_to_image(vars.mlx, config->no, &width, &height);
+	//vars.file = text_img;
+
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
 	mlx_loop(vars.mlx);

@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/18 14:56:28 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/19 20:01:16 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,22 @@ typedef	struct	s_data
 	void		*img;
 }				t_data;
 
+typedef struct	s_text
+{
+	t_data		*img;
+	int			width;
+	int			height;
+}				t_text;
+
+typedef struct	s_files
+{
+	t_text		*n_text;
+	t_text		*s_text;
+	t_text		*w_text;
+	t_text		*e_text;
+	t_text		*sprite;
+}				t_files;
+
 typedef struct	s_vars
 {
 	void		*mlx;
@@ -91,6 +107,7 @@ typedef struct	s_vars
 	t_conf		*config;
 	t_pers		*plr;
 	t_rays		*ray;
+	t_files		*file;
 }				t_vars;
 
 void				my_mlx_pixel_put(t_data *data, int x, int y,\
