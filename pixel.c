@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/19 20:00:38 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/20 17:17:05 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,17 @@ int				render_next_frame(t_vars *vars)
 	drow_map(vars);
 	drow_plr(vars);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 0);
+
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->n_text->img->img,\
+			100, 350);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->s_text->img->img,\
+			150, 400);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->w_text->img->img,\
+			200, 450);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->e_text->img->img,\
+			250, 500);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->sprite->img->img,\
+			300, 550);
 	mlx_do_sync(vars->mlx);
 	return (1);
 }
@@ -218,21 +229,19 @@ int				painting(t_conf *config, t_pers *plr)
 {
 	t_vars		vars;
 	t_data		img;
-	//int			width;
-	//int			height;
-	//void		*text_img;
 
 	vars = (t_vars){.config = config, .plr = plr, .img = &img,
 		.mlx = mlx_init()};
+
+
 	vars.win = mlx_new_window(vars.mlx, config->res_x, config->res_y,
 			"Hello world map!");
 	vars.img->img = mlx_new_image(vars.mlx, config->res_x, config->res_y);
+
 	vars.img->addr = mlx_get_data_addr(vars.img->img, &vars.img->bits_per_pixel,
 			&vars.img->line_length, &vars.img->endian);
 
-
-	//text_img = mlx_xpm_file_to_image(vars.mlx, config->no, &width, &height);
-	//vars.file = text_img;
+	text_collect(&vars);
 
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
