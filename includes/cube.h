@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/20 16:52:01 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/20 19:18:46 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct		s_rays
 	t_point			map;
 	t_point			line_start;
 	t_point			line_end;
+	int				line_height;
 	int				hit_side;
 	int				hit;
 }					t_rays;
