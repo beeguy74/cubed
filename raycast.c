@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/20 19:45:32 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/22 13:31:29 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,22 @@ int		vert_line_calc(t_rays *ray, t_pers *plr, int res_y)
 }
 */
 
+t_text	*ch_text(t_rays *ray, t_files *file)
+{
+	if (ray->hit_side == 1)
+	{
+		if (ray->dir.y < 0)
+			return (file->n_text);
+		return (file->s_text);
+	}
+	else
+	{
+		if (ray->dir.x < 0)
+			return (file->w_text);
+		return (file->e_text);
+	}
+}
+
 int		text_calc(t_vars *vars, int x)
 {		
 	double	wall_x; //where exactly the wall was hit
@@ -135,42 +151,39 @@ int		text_calc(t_vars *vars, int x)
 	int		color;
 	int		*img;
 
-	img = (int*)vars->file->n_text->img->addr;
+	img = (int*)(ch_text(vars->ray, vars->file))->img->addr;
 
 	if (vars->ray->hit_side == 0)
 		wall_x = vars->plr->pos.y + vars->ray->wall_dist * vars->ray->dir.y;
 	else
 		wall_x = vars->plr->pos.x + vars->ray->wall_dist * vars->ray->dir.x;
-	wall_x -= round((wall_x));
-
+	wall_x -= floor((wall_x));
 	//x coordinate on the texture
-	tex_x = (int)wall_x * (double)(vars->file->n_text->width);
+	tex_x = (int)(wall_x * (double)((ch_text(vars->ray, vars->file))->width));
 	if(vars->ray->hit_side == 0 && vars->ray->dir.x > 0)
-		tex_x = vars->file->n_text->width - tex_x - 1;
+		tex_x = (ch_text(vars->ray, vars->file))->width - tex_x - 1;
 	if(vars->ray->hit_side == 1 && vars->ray->dir.y < 0)
-		tex_x = vars->file->n_text->width - tex_x - 1;
-	// TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
+		tex_x = (ch_text(vars->ray, vars->file))->width - tex_x - 1;
 	// How much to increase the texture coordinate per screen pixel
-	step = 1.0 * vars->file->n_text->height / vars->ray->line_height;
+	step = 1.0 * (ch_text(vars->ray, vars->file))->height / vars->ray->line_height;
 	// Starting texture coordinate
-	tex_pos = (vars->ray->line_start.y - vars->config->res_y / 2\
+	tex_pos = (vars->ray->line_start.y - vars->config->res_y / 2
 										+ vars->ray->line_height / 2) * step;
 	for(int y = vars->ray->line_start.y; y < vars->ray->line_end.y; y++)
 	{
-		// Cast the texture coordinate to integer, and mask with (vars->file->n_text->height - 1) in case of overflow
-		int texY = (int)tex_pos & (vars->file->n_text->height - 1);
+		// Cast the texture coordinate to integer, and mask with ((ch_text(vars->ray, vars->file))->height - 1) in case of overflow
+		int texY = (int)tex_pos & ((ch_text(vars->ray, vars->file))->height - 1);
 		tex_pos += step;
 
 		//Uint32
-		//color = texture[texNum][vars->file->n_text->height * texY + tex_x];
-		color = img[vars->file->n_text->height * texY + tex_x];
+		//color = texture[texNum][(ch_text(vars->ray, vars->file))->height * texY + tex_x];
+		//make color darker for y-vars->ray->hit_sides: R, G and B byte each divided through two with a "shift" and an "and"
+		color = img[(ch_text(vars->ray, vars->file))->width * texY + tex_x];
+		if(vars->ray->hit_side == 0)
+			color = (color >> 1) & 8355711;
 		my_mlx_pixel_put(vars->img, x, y, color);
 
-		//make color darker for y-vars->ray->hit_sides: R, G and B byte each divided through two with a "shift" and an "and"
-		/*if(vars->ray->hit_side == 1)
-			color = (color >> 1) & 8355711;*/
 		//buffer[y][x] = color;
-
 	}
 
 	/*drawBuffer(buffer[0]);
