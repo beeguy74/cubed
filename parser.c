@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/19 18:15:51 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/22 17:54:49 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,7 @@ int					main(int argc, char **argv)
 
 	flag = 0;
 	errno = 0;
-	if (argc == 2)
+	if (argc == 3)
 	{
 		config.map = ft_open_file(argv[1]);
 	}

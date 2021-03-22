@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/22 13:25:09 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/22 17:46:48 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,5 +122,6 @@ int					painting(t_conf *config, t_pers *plr);
 int					raycast(t_vars *vars);
 void				err_exit(int err);
 void				text_collect(t_vars *vars);
+void				ft_bmp(t_data *img, t_conf *config, char *file_name)
 
 #endif
