@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/23 16:59:26 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/23 19:00:39 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void				err_exit(int err)
 		msg_errno = strerror(errno);
 	else if (err == 12)
 		msg_errno = "memory for list wasnt allocated";
+	else if (err == 11)
+		msg_errno = "wrong arguments";
 	ft_putstr((void*)(msg));
 	ft_putstr((void*)(msg_errno));
 	exit(0);
@@ -234,8 +236,9 @@ int					main(int argc, char **argv)
 		if (!ft_strncmp("--save", argv[2], 6))
 			config.s_shot_flag = 1;
 	}
-	if (argc != 2 & argc != 3)
-		err_exit(12);
+	if ((argc != 2 & argc != 3) || !ft_strnstr(argv[1] + ft_strlen(argv[1]) - 4,
+											".cub", ft_strlen(argv[1])))
+		err_exit(11);
 	else
 		config.map = ft_open_file(argv[1]);
 	map = config.map;
