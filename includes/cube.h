@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/22 17:46:48 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/23 18:01:41 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct		s_rays
 
 typedef struct		s_conf
 {
+	int				s_shot_flag;
 	int				res_x;
 	int				res_y;
 	char			*no;
@@ -111,6 +112,16 @@ typedef struct	s_vars
 	t_rays		*ray;
 }				t_vars;
 
+typedef struct	s_calc
+{
+	double		wall_x; //where exactly the wall was hit
+	double		step; // How much to increase the texture coordinate per screen pixel
+	double		tex_pos; // Starting texture coordinate
+	int			tex_x; //x coordinate on the texture
+	int			color;
+	int			tex_y;
+}				t_calc;
+
 void				my_mlx_pixel_put(t_data *data, int x, int y,\
 		unsigned int color);
 void				line_put(t_data *img, t_point start, t_point end,\
@@ -122,6 +133,6 @@ int					painting(t_conf *config, t_pers *plr);
 int					raycast(t_vars *vars);
 void				err_exit(int err);
 void				text_collect(t_vars *vars);
-void				ft_bmp(t_data *img, t_conf *config, char *file_name)
+void				ft_bmp(t_data *img, t_conf *config, char *file_name);
 
 #endif

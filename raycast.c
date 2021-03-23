@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/22 13:31:29 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/23 18:27:28 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ int		ray_init_calc(t_rays *ray, t_pers *plr, double x_cam)
 {
 	t_vect dir;
 	t_vect delta;
-	//t_vect side;
-	
+
 	ray->hit = 0;
 	ray->map.x = (int)plr->pos.x;
 	ray->map.y = (int)plr->pos.y;
@@ -39,27 +38,27 @@ int		ray_init_calc(t_rays *ray, t_pers *plr, double x_cam)
 
 int		ray_side_calc(t_rays *ray, t_pers *plr)
 {
-	if(ray->dir.x < 0)
-		{
-			ray->step.x = -1;
-			ray->side.x = (plr->pos.x - ray->map.x) * ray->delta.x;
-		}
-		else
-		{
-			ray->step.x = 1;
-			ray->side.x = (-plr->pos.x + ray->map.x + 1.) * ray->delta.x;
-		}
-		if(ray->dir.y < 0)
-		{
-			ray->step.y = -1;
-			ray->side.y = (plr->pos.y - ray->map.y) * ray->delta.y;
-		}
-		else
-		{
-			ray->step.y = 1;
-			ray->side.y = (-plr->pos.y + ray->map.y + 1.) * ray->delta.y;
-		}
-		return (0);
+	if (ray->dir.x < 0)
+	{
+		ray->step.x = -1;
+		ray->side.x = (plr->pos.x - ray->map.x) * ray->delta.x;
+	}
+	else
+	{
+		ray->step.x = 1;
+		ray->side.x = (-plr->pos.x + ray->map.x + 1.) * ray->delta.x;
+	}
+	if (ray->dir.y < 0)
+	{
+		ray->step.y = -1;
+		ray->side.y = (plr->pos.y - ray->map.y) * ray->delta.y;
+	}
+	else
+	{
+		ray->step.y = 1;
+		ray->side.y = (-plr->pos.y + ray->map.y + 1.) * ray->delta.y;
+	}
+	return (0);
 }
 
 int		digital_diff_analys(t_rays *ray, char **map)
@@ -70,7 +69,7 @@ int		digital_diff_analys(t_rays *ray, char **map)
 	{
 		i = 0;
 		//jump to next map square, OR in x-direction, OR in y-direction
-		if(ray->side.x < ray->side.y)
+		if (ray->side.x < ray->side.y)
 		{
 			ray->side.x += ray->delta.x;
 			ray->map.x += ray->step.x;
@@ -108,23 +107,13 @@ int		vert_line_calc(t_rays *ray, t_pers *plr, int res_y)
 	ray->line_height = line_height;
 	//calculate lowest and highest pixel to fill in current stripe
 	ray->line_start.y = -line_height / 2 + res_y / 2;
-	if(ray->line_start.y < 0)
+	if (ray->line_start.y < 0)
 		ray->line_start.y = 0;
 	ray->line_end.y = line_height / 2 + res_y / 2;
-	if(ray->line_end.y >= res_y)
+	if (ray->line_end.y >= res_y)
 		ray->line_end.y = res_y - 1;
 	return (0);
 }
-
-/*void	ver_line_put(t_data *img, t_point start, t_point end, unsigned int col)
-{
-	while (start.y < end.y)
-	{
-		my_mlx_pixel_put(img, start.x, start.y, col);
-		start.y++;
-	}
-}
-*/
 
 t_text	*ch_text(t_rays *ray, t_files *file)
 {
@@ -142,60 +131,54 @@ t_text	*ch_text(t_rays *ray, t_files *file)
 	}
 }
 
-int		text_calc(t_vars *vars, int x)
-{		
-	double	wall_x; //where exactly the wall was hit
-	double	step; // How much to increase the texture coordinate per screen pixel
-	double	tex_pos; // Starting texture coordinate
-	int		tex_x; //x coordinate on the texture
-	int		color;
-	int		*img;
-
-	img = (int*)(ch_text(vars->ray, vars->file))->img->addr;
-
+void	calc_x(t_calc *calc, t_vars *vars, t_text *text)
+{
 	if (vars->ray->hit_side == 0)
-		wall_x = vars->plr->pos.y + vars->ray->wall_dist * vars->ray->dir.y;
+		calc->wall_x = vars->plr->pos.y + vars->ray->wall_dist *
+															vars->ray->dir.y;
 	else
-		wall_x = vars->plr->pos.x + vars->ray->wall_dist * vars->ray->dir.x;
-	wall_x -= floor((wall_x));
+		calc->wall_x = vars->plr->pos.x + vars->ray->wall_dist *
+															vars->ray->dir.x;
+	calc->wall_x -= floor((calc->wall_x));
 	//x coordinate on the texture
-	tex_x = (int)(wall_x * (double)((ch_text(vars->ray, vars->file))->width));
-	if(vars->ray->hit_side == 0 && vars->ray->dir.x > 0)
-		tex_x = (ch_text(vars->ray, vars->file))->width - tex_x - 1;
-	if(vars->ray->hit_side == 1 && vars->ray->dir.y < 0)
-		tex_x = (ch_text(vars->ray, vars->file))->width - tex_x - 1;
+	calc->tex_x = (int)(calc->wall_x * (double)(text->width));
+	if (vars->ray->hit_side == 0 && vars->ray->dir.x > 0)
+		calc->tex_x = text->width - calc->tex_x - 1;
+	if (vars->ray->hit_side == 1 && vars->ray->dir.y < 0)
+		calc->tex_x = text->width - calc->tex_x - 1;
+}
+
+int		text_calc(t_vars *vars, int x)
+{
+	t_calc	calc;
+	t_text	*text;
+	int		*img;
+	int		y;
+
+	y = vars->ray->line_start.y;
+	text = ch_text(vars->ray, vars->file);
+	img = (int*)text->img->addr;
+	calc_x(&calc, vars, text);
 	// How much to increase the texture coordinate per screen pixel
-	step = 1.0 * (ch_text(vars->ray, vars->file))->height / vars->ray->line_height;
+	calc.step = 1.0 * text->height / vars->ray->line_height;
 	// Starting texture coordinate
-	tex_pos = (vars->ray->line_start.y - vars->config->res_y / 2
-										+ vars->ray->line_height / 2) * step;
-	for(int y = vars->ray->line_start.y; y < vars->ray->line_end.y; y++)
+	calc.tex_pos = (vars->ray->line_start.y - vars->config->res_y / 2
+									+ vars->ray->line_height / 2) * calc.step;
+	while (y < vars->ray->line_end.y)
 	{
-		// Cast the texture coordinate to integer, and mask with ((ch_text(vars->ray, vars->file))->height - 1) in case of overflow
-		int texY = (int)tex_pos & ((ch_text(vars->ray, vars->file))->height - 1);
-		tex_pos += step;
-
-		//Uint32
-		//color = texture[texNum][(ch_text(vars->ray, vars->file))->height * texY + tex_x];
-		//make color darker for y-vars->ray->hit_sides: R, G and B byte each divided through two with a "shift" and an "and"
-		color = img[(ch_text(vars->ray, vars->file))->width * texY + tex_x];
-		if(vars->ray->hit_side == 0)
-			color = (color >> 1) & 8355711;
-		my_mlx_pixel_put(vars->img, x, y, color);
-
-		//buffer[y][x] = color;
+		calc.tex_y = (int)calc.tex_pos & (text->height - 1);
+		calc.tex_pos += calc.step;
+		calc.color = img[text->width * calc.tex_y + calc.tex_x];
+		if (vars->ray->hit_side == 0)
+			calc.color = (calc.color >> 1) & 8355711;
+		my_mlx_pixel_put(vars->img, x, y++, calc.color);
 	}
-
-	/*drawBuffer(buffer[0]);
-	for(int y = 0; y < h; y++) for(int x = 0; x < w; x++) buffer[y][x] = 0; //clear the buffer instead of cls()
-	*/
 	return (0);
 }
 
 int		raycast(t_vars *vars)
 {
 	int				i;
-	unsigned int	wall_col;
 	double			x_cam;
 	t_rays			ray;
 
@@ -204,36 +187,13 @@ int		raycast(t_vars *vars)
 	while (i < vars->config->res_x)
 	{
 		x_cam = 2. * i / vars->config->res_x - 1;
-		//which box of the map we're in
-		//length of ray from current position to next x or y-side
-		//length of ray from one x or y-side to next x or y-side
 		ray_init_calc(&ray, vars->plr, x_cam);
-		//what direction to step in x or y-direction (either +1 or -1)
-		//calculate step and initial sideDist
 		ray_side_calc(&ray, vars->plr);
-		//perform DDA
 		digital_diff_analys(&ray, vars->config->link_map);
-		//Calculate distance projected on camera direction
-		//(Euclidean distance will give fisheye effect!)
-		//Calculate height of line to draw on screen
-		//calculate lowest and highest pixel to fill in current stripe
 		ray.line_start.x = i;
 		ray.line_end.x = i;
 		vert_line_calc(&ray, vars->plr, vars->config->res_y);
-		//give x and y sides different brightness
-		wall_col = 0x004291FF;
-		if(ray.hit_side == 1)
-			wall_col = wall_col / 2;
-		//draw the pixels of the stripe as a vertical line
-		//ver_line_put(vars->img, ray.line_start, ray.line_end, wall_col);
-		
-		//texturing calculations
-		//int texNum = worldMap[mapX][mapY] - 1;
-		////1 subtracted from it so that texture 0 can be used!
-
-		//calculate value of wallX
 		text_calc(vars, i);
-
 		i++;
 	}
 	return (0);

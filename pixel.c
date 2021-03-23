@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/20 17:17:05 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/23 18:25:34 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,16 @@ void			my_mlx_pixel_put(t_data *data, int x, int y,\
 	*(unsigned int*)dst = color;
 }
 
-void			line_put(t_data *img, t_point start, t_point end,\
-		unsigned int color)
+void			line_put(t_data *img, t_point start, t_point end,
+													unsigned int color)
 {
-	int		deltax = 0;
-	int		deltay = 0;
-	int		diry = 0;
-	int		error = 0;
-	int		deltaerr = 0;
+	int		deltax;
+	int		deltay;
+	int		diry;
+	int		error;
+	int		deltaerr;
 
+	error = 0;
 	diry = end.y - start.y;
 	deltax = abs(end.x - start.x);
 	deltay = abs(end.y - start.y);
@@ -130,8 +131,12 @@ int				render_next_frame(t_vars *vars)
 	raycast(vars);
 	drow_map(vars);
 	drow_plr(vars);
+	if (vars->config->s_shot_flag == 1)
+	{
+		ft_bmp(vars->img, vars->config, "screenshot.bmp");
+		err_exit(12);
+	}
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 0);
-
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->n_text->img->img,\
 			100, 350);
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->file->s_text->img->img,\
@@ -155,32 +160,29 @@ int				win_close(t_vars *vars)
 
 int				plr_move(int keycode, t_vars *vars)
 {
-    //move forward if no wall in front of you
 	double	m_speed;
 	char	**map;
-	
+
 	m_speed = 0.2;
 	map = vars->config->map;
-    //move backwards if no wall behind you
 	if (keycode == 125)
-    {
-      if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x -\
-				  vars->plr->sight.x * m_speed)] != '1')
-		  vars->plr->pos.x -= vars->plr->sight.x * m_speed;
-      if (map[(int)(vars->plr->pos.y - vars->plr->sight.y *\
-				  m_speed)][(int)(vars->plr->pos.x)] != '1')
-		  vars->plr->pos.y -= vars->plr->sight.y * m_speed;
+	{
+		if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x -
+									vars->plr->sight.x * m_speed)] != '1')
+			vars->plr->pos.x -= vars->plr->sight.x * m_speed;
+		if (map[(int)(vars->plr->pos.y - vars->plr->sight.y *
+								m_speed)][(int)(vars->plr->pos.x)] != '1')
+			vars->plr->pos.y -= vars->plr->sight.y * m_speed;
 	}
-    //move forward if no wall behind you
 	if (keycode == 126)
-    {
-      if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x +\
-				  vars->plr->sight.x * m_speed)] != '1')
-		  vars->plr->pos.x += vars->plr->sight.x * m_speed;
-      if (map[(int)(vars->plr->pos.y + vars->plr->sight.y *\
-				  m_speed)][(int)(vars->plr->pos.x)] != '1')
-		  vars->plr->pos.y += vars->plr->sight.y * m_speed;
-    }
+	{
+		if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x +
+							vars->plr->sight.x * m_speed)] != '1')
+			vars->plr->pos.x += vars->plr->sight.x * m_speed;
+		if (map[(int)(vars->plr->pos.y + vars->plr->sight.y *
+						m_speed)][(int)(vars->plr->pos.x)] != '1')
+			vars->plr->pos.y += vars->plr->sight.y * m_speed;
+	}
 	return (0);
 }
 
@@ -193,24 +195,23 @@ int				plr_rotate(int keycode, t_pers *plr)
 	speed = 0.1;
 	old_cam_x = plr->cam.x;
 	old_sight_x = plr->sight.x;
-    //rotate to the right
-    if (keycode == 123)
-    {
-      //both camera direction and camera plane must be rotated
-      plr->sight.x = plr->sight.x * cos(-speed) - plr->sight.y * sin(-speed);
-      plr->sight.y = old_sight_x * sin(-speed) + plr->sight.y * cos(-speed);
-      plr->cam.x = plr->cam.x * cos(-speed) - plr->cam.y * sin(-speed);
-      plr->cam.y = old_cam_x * sin(-speed) + plr->cam.y * cos(-speed);
+	//rotate to the right
+	//both camera direction and camera plane must be rotated
+	if (keycode == 123)
+	{
+		plr->sight.x = plr->sight.x * cos(-speed) - plr->sight.y * sin(-speed);
+		plr->sight.y = old_sight_x * sin(-speed) + plr->sight.y * cos(-speed);
+		plr->cam.x = plr->cam.x * cos(-speed) - plr->cam.y * sin(-speed);
+		plr->cam.y = old_cam_x * sin(-speed) + plr->cam.y * cos(-speed);
 	}
-    //rotate to the left
-    if (keycode == 124)
-    {
-      //both camera direction and camera plane must be rotated
-      plr->sight.x = plr->sight.x * cos(speed) - plr->sight.y * sin(speed);
-      plr->sight.y = old_sight_x * sin(speed) + plr->sight.y * cos(speed);
-      plr->cam.x = plr->cam.x * cos(speed) - plr->cam.y * sin(speed);
-      plr->cam.y = old_cam_x * sin(speed) + plr->cam.y * cos(speed);
-    }
+	//rotate to the left
+	if (keycode == 124)
+	{
+		plr->sight.x = plr->sight.x * cos(speed) - plr->sight.y * sin(speed);
+		plr->sight.y = old_sight_x * sin(speed) + plr->sight.y * cos(speed);
+		plr->cam.x = plr->cam.x * cos(speed) - plr->cam.y * sin(speed);
+		plr->cam.y = old_cam_x * sin(speed) + plr->cam.y * cos(speed);
+	}
 	return (0);
 }
 
@@ -232,19 +233,16 @@ int				painting(t_conf *config, t_pers *plr)
 
 	vars = (t_vars){.config = config, .plr = plr, .img = &img,
 		.mlx = mlx_init()};
-
-
-	vars.win = mlx_new_window(vars.mlx, config->res_x, config->res_y,
-			"Hello world map!");
+	if (config->s_shot_flag == 0)
+		vars.win = mlx_new_window(vars.mlx, config->res_x, config->res_y,
+				"Hello world map!");
 	vars.img->img = mlx_new_image(vars.mlx, config->res_x, config->res_y);
-
 	vars.img->addr = mlx_get_data_addr(vars.img->img, &vars.img->bits_per_pixel,
 			&vars.img->line_length, &vars.img->endian);
-
 	text_collect(&vars);
-
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
-	mlx_hook(vars.win, 2, 1l<<0, key_events, &vars);
+	if (config->s_shot_flag == 0)
+		mlx_hook(vars.win, 2, 1l << 0, key_events, &vars);
 	mlx_loop(vars.mlx);
 	return (0);
 }

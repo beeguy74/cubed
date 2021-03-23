@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/22 17:54:49 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/23 16:59:26 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,16 +231,17 @@ int					main(int argc, char **argv)
 	errno = 0;
 	if (argc == 3)
 	{
-		config.map = ft_open_file(argv[1]);
+		if (!ft_strncmp("--save", argv[2], 6))
+			config.s_shot_flag = 1;
 	}
+	if (argc != 2 & argc != 3)
+		err_exit(12);
 	else
-		printf("SHit!\n");
+		config.map = ft_open_file(argv[1]);
 	map = config.map;
 	flag += parser(&config);
 	flag += find_plr(&plr, config.link_map);
 	flag += check_map(config.link_map, &plr);
-
-	//printf("No text = %s\n", config.no);
 	painting(&config, &plr);
 	return (0);
 }
