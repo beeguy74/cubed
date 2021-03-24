@@ -134,5 +134,6 @@ int					raycast(t_vars *vars);
 void				err_exit(int err);
 void				text_collect(t_vars *vars);
 void				ft_bmp(t_data *img, t_conf *config, char *file_name);
+void				sprite_draw(t_vars *vars, double *z_buffer);
 
 #endif

@@ -180,6 +180,7 @@ int		raycast(t_vars *vars)
 {
 	int				i;
 	double			x_cam;
+	double			z_buffer[vars->config->res_x];
 	t_rays			ray;
 
 	i = 0;
@@ -193,6 +194,7 @@ int		raycast(t_vars *vars)
 		ray.line_start.x = i;
 		ray.line_end.x = i;
 		vert_line_calc(&ray, vars->plr, vars->config->res_y);
+		z_buffer[i] = ray.wall_dist;
 		text_calc(vars, i);
 		i++;
 	}
