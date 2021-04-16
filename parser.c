@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/23 19:00:39 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/24 19:13:51 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,10 @@ int					parser(t_conf *config)
 		proc_textures(config);
 		proc_colors(config);
 		if (proc_map(config))
+		{
+	//		find_sprites(config);
 			return (0);
+		}
 		config->map++;
 	}
 	return (1);

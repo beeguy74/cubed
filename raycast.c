@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/23 18:27:28 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/24 18:00:15 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,5 +198,6 @@ int		raycast(t_vars *vars)
 		text_calc(vars, i);
 		i++;
 	}
+	//draw_sprite(vars, z_buffer);
 	return (0);
 }

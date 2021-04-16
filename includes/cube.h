@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/23 18:01:41 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/24 17:51:25 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,22 @@ typedef struct		s_rays
 	int				hit;
 }					t_rays;
 
+typedef struct	s_sprite
+{
+	int			pos_x;
+	int			pos_y;
+	double		dist;
+	double		x;
+	double		y;
+}				t_sprite;
+
 typedef struct		s_conf
 {
 	int				s_shot_flag;
 	int				res_x;
 	int				res_y;
+	int				sprite_num;
+	int				*sprite_order;
 	char			*no;
 	char			*so;
 	char			*we;
@@ -74,6 +85,7 @@ typedef struct		s_conf
 	char			**link_map;
 	unsigned int	floor_col;
 	unsigned int	ceil_col;
+	t_sprite		**sprite_mas;
 }					t_conf;
 
 typedef	struct	s_data
@@ -122,6 +134,7 @@ typedef struct	s_calc
 	int			tex_y;
 }				t_calc;
 
+void				draw_sprite(t_vars *vars, double *z_buffer);
 void				my_mlx_pixel_put(t_data *data, int x, int y,\
 		unsigned int color);
 void				line_put(t_data *img, t_point start, t_point end,\
@@ -134,6 +147,6 @@ int					raycast(t_vars *vars);
 void				err_exit(int err);
 void				text_collect(t_vars *vars);
 void				ft_bmp(t_data *img, t_conf *config, char *file_name);
-void				sprite_draw(t_vars *vars, double *z_buffer);
+void				find_sprites(t_conf *config);
 
 #endif

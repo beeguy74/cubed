@@ -6,7 +6,7 @@
 /*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/23 18:25:34 by tphung           ###   ########.fr       */
+/*   Updated: 2021/03/24 19:13:51 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int				render_next_frame(t_vars *vars)
 	raycast(vars);
 	drow_map(vars);
 	drow_plr(vars);
+	//draw_sprite(vars);
 	if (vars->config->s_shot_flag == 1)
 	{
 		ft_bmp(vars->img, vars->config, "screenshot.bmp");
