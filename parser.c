@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/24 19:13:51 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/16 15:43:58 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,7 @@ int					main(int argc, char **argv)
 
 	flag = 0;
 	errno = 0;
+	config.s_shot_flag = 0;
 	if (argc == 3)
 	{
 		if (!ft_strncmp("--save", argv[2], 6))
