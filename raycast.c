@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/24 18:00:15 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/16 17:38:57 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,6 @@ int		raycast(t_vars *vars)
 		text_calc(vars, i);
 		i++;
 	}
-	//draw_sprite(vars, z_buffer);
+	draw_sprite(vars, z_buffer);
 	return (0);
 }
