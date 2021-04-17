@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 17:21:40 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/16 18:13:44 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/17 15:51:21 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,21 +61,27 @@ void  sprite_dist_calc(t_conf* config, t_pers *plr, t_sprite **sprite_mas)
 
 void sprite_sort(t_conf *config, t_sprite **sprite_mas)
 {
-  int i;
-  int j;
-  int tmp;
+  int       i;
+  int       j;
+  int       tmp;
+  t_sprite  *s_tmp;
 
   i = 0;
   tmp = 0;
+  s_tmp = 0;
   while (i < config->sprite_num)
   {
     j = 0;
     while (j < config->sprite_num)
     {
-      if (sprite_mas[i]->dist < sprite_mas[j]->dist)
+      if (sprite_mas[i]->dist > sprite_mas[j]->dist)
       {
-        tmp = j;
-        
+  //      tmp = config->sprite_order[i];
+    //    config->sprite_order[i] = config->sprite_order[j];
+      //  config->sprite_order[j] = tmp;
+          s_tmp = sprite_mas[i];
+          sprite_mas[i] = sprite_mas[j];
+          sprite_mas[j] = s_tmp;
       }
       j++;
     }
@@ -87,7 +93,27 @@ void	draw_sprite(t_vars *vars, double *z_buffer)
 {
 	//SPRITE CASTING
   sprite_dist_calc(vars->config, vars->plr, vars->config->sprite_mas);
-
+  int j = 0;
+  printf("UNsorted: \n");
+  while (j < vars->config->sprite_num)
+  {
+   // j = vars->config->sprite_order[i++];
+    printf("x = %f y = %f dist = %f\n", vars->config->sprite_mas[j]->pos_x,
+                                    vars->config->sprite_mas[j]->pos_y,
+                                    vars->config->sprite_mas[j]->dist);
+                                    j++;
+  }
+  sprite_sort(vars->config, vars->config->sprite_mas);
+  printf("SORTED: \n");
+  j = 0;
+  while (j < vars->config->sprite_num)
+  {
+   // j = vars->config->sprite_order[i++];
+    printf("x = %f y = %f dist = %f\n", vars->config->sprite_mas[j]->pos_x,
+                                    vars->config->sprite_mas[j]->pos_y,
+                                    vars->config->sprite_mas[j]->dist);
+                                    j++;
+  }
 
     //sort sprites from far to close
   if (z_buffer)

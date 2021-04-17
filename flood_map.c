@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flood_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 13:36:08 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/24 17:14:50 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/17 15:47:56 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	find_sprites(t_conf *config)
 			{
 				if (!(tmp = malloc(sizeof(t_sprite))))
 					err_exit(0);
-				tmp->pos_y = i;
-				tmp->pos_x = j;
+				tmp->pos_y = i + 0.5;
+				tmp->pos_x = j + 0.5;
 				*config->sprite_mas++ = tmp;
 			}
 			j++;
