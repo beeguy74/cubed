@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 17:21:40 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/17 17:35:30 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/17 17:38:11 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,10 +165,4 @@ void	draw_sprite(t_vars *vars, double *z_buffer)
   {
     sprite_cam_pos_calc(vars->config, vars->plr, vars->config->sprite_mas[i++], vars->file->sprite, z_buffer, vars);
   }
-  
-
-  if (z_buffer)
-    return;
-  return ;
-
 }
