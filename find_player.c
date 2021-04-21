@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_player.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 16:50:17 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/19 17:09:45 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 12:55:29 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	get_dir(char c, t_pers *plr)
 	}
 }
 
-int		check_pos(t_pers *plr, int x, int y)
+int	check_pos(t_pers *plr, int x, int y)
 {
 	if (plr->pos.x == 0.5 && plr->pos.y == 0.5)
 	{
@@ -50,7 +50,7 @@ int		check_pos(t_pers *plr, int x, int y)
 	return (0);
 }
 
-int		plr_position(t_pers *plr, char **map)
+int	plr_position(t_pers *plr, char **map)
 {
 	int		x;
 	int		y;
@@ -75,7 +75,7 @@ int		plr_position(t_pers *plr, char **map)
 	return (0);
 }
 
-int		find_plr(t_pers *plr, char **map)
+int	find_plr(t_pers *plr, char **map)
 {
 	double	old_sight_x;
 	double	old_cam_x;
@@ -86,13 +86,13 @@ int		find_plr(t_pers *plr, char **map)
 		err_exit(12);
 	old_cam_x = plr->cam.x;
 	old_sight_x = plr->sight.x;
-	plr->sight.x = plr->sight.x * cos(-0.001)\
+	plr->sight.x = plr->sight.x * cos(-0.001) \
 					- plr->sight.y * sin(-0.001);
-	plr->sight.y = old_sight_x * sin(-0.001)\
+	plr->sight.y = old_sight_x * sin(-0.001) \
 					+ plr->sight.y * cos(-0.001);
-	plr->cam.x = plr->cam.x * cos(-0.001)\
+	plr->cam.x = plr->cam.x * cos(-0.001) \
 					- plr->cam.y * sin(-0.001);
-	plr->cam.y = old_cam_x * sin(-0.001)\
+	plr->cam.y = old_cam_x * sin(-0.001) \
 					+ plr->cam.y * cos(-0.001);
 	return (0);
 }

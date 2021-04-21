@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/17 15:43:26 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 13:22:09 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,6 @@ typedef struct	s_calc
 
 void				draw_sprite(t_vars *vars, double *z_buffer);
 void				my_mlx_pixel_put(t_data *data, int x, int y,\
-		unsigned int color);
-void				line_put(t_data *img, t_point start, t_point end,\
 		unsigned int color);
 int					flood_fill(char **map, int x, int y);
 int					check_map(char **map, t_pers *plr);

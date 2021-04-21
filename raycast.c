@@ -6,16 +6,17 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:27:20 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/16 17:38:57 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 13:48:17 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/cube.h"
 
-int		ray_init_calc(t_rays *ray, t_pers *plr, double x_cam)
+//length of ray from current position to next x or y-side
+int	ray_init_calc(t_rays *ray, t_pers *plr, double x_cam)
 {
-	t_vect dir;
-	t_vect delta;
+	t_vect	dir;
+	t_vect	delta;
 
 	ray->hit = 0;
 	ray->map.x = (int)plr->pos.x;
@@ -23,7 +24,6 @@ int		ray_init_calc(t_rays *ray, t_pers *plr, double x_cam)
 	dir.x = plr->sight.x + plr->cam.x * x_cam;
 	dir.y = plr->sight.y + plr->cam.y * x_cam;
 	ray->dir = dir;
-	//length of ray from current position to next x or y-side
 	if (dir.x == 0.)
 		delta.x = 1.;
 	else
@@ -36,7 +36,7 @@ int		ray_init_calc(t_rays *ray, t_pers *plr, double x_cam)
 	return (0);
 }
 
-int		ray_side_calc(t_rays *ray, t_pers *plr)
+int	ray_side_calc(t_rays *ray, t_pers *plr)
 {
 	if (ray->dir.x < 0)
 	{
@@ -61,14 +61,15 @@ int		ray_side_calc(t_rays *ray, t_pers *plr)
 	return (0);
 }
 
-int		digital_diff_analys(t_rays *ray, char **map)
+//jump to next map square, OR in x-direction, OR in y-direction
+//Check if ray has hit a wall
+int	digital_diff_analys(t_rays *ray, char **map)
 {
 	int		i;
 
 	while (ray->hit == 0)
 	{
 		i = 0;
-		//jump to next map square, OR in x-direction, OR in y-direction
 		if (ray->side.x < ray->side.y)
 		{
 			ray->side.x += ray->delta.x;
@@ -81,7 +82,6 @@ int		digital_diff_analys(t_rays *ray, char **map)
 			ray->map.y += ray->step.y;
 			ray->hit_side = 1;
 		}
-		//Check if ray has hit a wall
 		if (map[ray->map.y][ray->map.x] == '1')
 		{
 			ray->hit = 1;
@@ -90,7 +90,9 @@ int		digital_diff_analys(t_rays *ray, char **map)
 	return (0);
 }
 
-int		vert_line_calc(t_rays *ray, t_pers *plr, int res_y)
+//Calculate height of line to draw on screen
+//calculate lowest and highest pixel to fill in current stripe
+int	vert_line_calc(t_rays *ray, t_pers *plr, int res_y)
 {
 	double	wall_dist;
 	int		line_height;
@@ -101,11 +103,9 @@ int		vert_line_calc(t_rays *ray, t_pers *plr, int res_y)
 	else
 		wall_dist = (ray->map.y - plr->pos.y +\
 				(2 - ray->step.y) / 2) / ray->dir.y;
-	//Calculate height of line to draw on screen
 	ray->wall_dist = wall_dist;
 	line_height = (int)(res_y / wall_dist);
 	ray->line_height = line_height;
-	//calculate lowest and highest pixel to fill in current stripe
 	ray->line_start.y = -line_height / 2 + res_y / 2;
 	if (ray->line_start.y < 0)
 		ray->line_start.y = 0;
@@ -131,16 +131,16 @@ t_text	*ch_text(t_rays *ray, t_files *file)
 	}
 }
 
+//tex+x is a x coordinate on the texture
 void	calc_x(t_calc *calc, t_vars *vars, t_text *text)
 {
 	if (vars->ray->hit_side == 0)
-		calc->wall_x = vars->plr->pos.y + vars->ray->wall_dist *
+		calc->wall_x = vars->plr->pos.y + vars->ray->wall_dist * \
 															vars->ray->dir.y;
 	else
-		calc->wall_x = vars->plr->pos.x + vars->ray->wall_dist *
+		calc->wall_x = vars->plr->pos.x + vars->ray->wall_dist * \
 															vars->ray->dir.x;
 	calc->wall_x -= floor((calc->wall_x));
-	//x coordinate on the texture
 	calc->tex_x = (int)(calc->wall_x * (double)(text->width));
 	if (vars->ray->hit_side == 0 && vars->ray->dir.x > 0)
 		calc->tex_x = text->width - calc->tex_x - 1;
@@ -148,7 +148,9 @@ void	calc_x(t_calc *calc, t_vars *vars, t_text *text)
 		calc->tex_x = text->width - calc->tex_x - 1;
 }
 
-int		text_calc(t_vars *vars, int x)
+//calc.step is How much to increase the texture coordinate per screen pixel
+//calc.tes_pos is Starting texture coordinate
+int	text_calc(t_vars *vars, int x)
 {
 	t_calc	calc;
 	t_text	*text;
@@ -157,12 +159,10 @@ int		text_calc(t_vars *vars, int x)
 
 	y = vars->ray->line_start.y;
 	text = ch_text(vars->ray, vars->file);
-	img = (int*)text->img->addr;
+	img = (int *)text->img->addr;
 	calc_x(&calc, vars, text);
-	// How much to increase the texture coordinate per screen pixel
 	calc.step = 1.0 * text->height / vars->ray->line_height;
-	// Starting texture coordinate
-	calc.tex_pos = (vars->ray->line_start.y - vars->config->res_y / 2
+	calc.tex_pos = (vars->ray->line_start.y - vars->config->res_y / 2 \
 									+ vars->ray->line_height / 2) * calc.step;
 	while (y < vars->ray->line_end.y)
 	{
@@ -176,14 +176,15 @@ int		text_calc(t_vars *vars, int x)
 	return (0);
 }
 
-int		raycast(t_vars *vars)
+int	raycast(t_vars *vars)
 {
 	int				i;
 	double			x_cam;
-	double			z_buffer[vars->config->res_x];
+	double			*z_buffer;
 	t_rays			ray;
 
 	i = 0;
+	z_buffer = malloc(sizeof(double) * vars->config->res_x);
 	vars->ray = &ray;
 	while (i < vars->config->res_x)
 	{

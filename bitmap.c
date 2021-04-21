@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bitmap.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tphung <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:06:16 by tphung            #+#    #+#             */
-/*   Updated: 2021/03/23 15:59:02 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 12:52:58 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ void	create_bmp_image(t_conf *config, t_data *img, int fd)
 	int				j;
 	int				end_lines;
 	int				end_bytes;
-	unsigned char	buf[config->res_x * config->res_y * 4];
+	unsigned char	*buf;
 
+	buf = malloc(sizeof(unsigned char) * config->res_x * config->res_y * 4);
+	if (!buf)
+		err_exit(0);
 	i = 0;
 	end_lines = img->line_length * (config->res_y - 1);
 	end_bytes = config->res_x * 4;
@@ -67,10 +70,11 @@ void	create_bmp_header(t_conf *config, int fd)
 
 void	ft_bmp(t_data *img, t_conf *config, char *file_name)
 {
-	int		fd;
+	int	fd;
 
 	fd = open(file_name, O_CREAT | O_WRONLY | O_APPEND | O_TRUNC,
-										S_IRWXU | S_IRWXG | S_IRWXO);
+			S_IRWXU | S_IRWXG | S_IRWXO);
+	errno = 0;
 	create_bmp_header(config, fd);
 	create_bmp_image(config, img, fd);
 	close(fd);

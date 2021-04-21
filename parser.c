@@ -6,27 +6,27 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/16 16:20:18 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 13:16:24 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
 #include "includes/libft.h"
 
-void				ft_putstr(void *data)
+void	ft_putstr(void *data)
 {
 	char	*line;
 	char	end;
 	int		len;
 
 	end = '\n';
-	line = (char*)data;
+	line = (char *)data;
 	len = ft_strlen(line);
 	write(0, line, len);
 	write(0, &end, 1);
 }
 
-void				err_exit(int err)
+void	err_exit(int err)
 {
 	char	*msg;
 	char	*msg_errno;
@@ -41,21 +41,24 @@ void				err_exit(int err)
 		msg_errno = "memory for list wasnt allocated";
 	else if (err == 11)
 		msg_errno = "wrong arguments";
-	ft_putstr((void*)(msg));
-	ft_putstr((void*)(msg_errno));
+	else if (err == 111)
+	{
+		msg = ":-)";
+		msg_errno = "screenshot.bmp created!";
+	}
+	ft_putstr((void *)(msg));
+	ft_putstr((void *)(msg_errno));
 	exit(0);
 }
 
-t_list				*gnl_to_list(int fd)
+t_list	*gnl_to_list(int fd)
 {
-	int		err;
 	char	*line;
 	t_list	*list;
 
-	err = 0;
 	line = 0;
 	list = 0;
-	while ((err = get_next_line(fd, &line)) > 0)
+	while (get_next_line(fd, &line) > 0)
 	{
 		if (!list)
 			list = ft_lstnew(ft_strdup(line));
@@ -73,7 +76,7 @@ t_list				*gnl_to_list(int fd)
 	return (list);
 }
 
-char				**list_to_map(t_list *list)
+char	**list_to_map(t_list *list)
 {
 	char	**map;
 	int		len;
@@ -82,13 +85,13 @@ char				**list_to_map(t_list *list)
 
 	i = 0;
 	len = ft_lstsize(list);
-	map = malloc(sizeof(char*) * (len + 1));
+	map = malloc(sizeof(char *) * (len + 1));
 	if (!map)
 		err_exit(0);
 	map[len] = NULL;
 	while (i < len)
 	{
-		map[i] = (char*)list->content;
+		map[i] = (char *)list->content;
 		tmp = list;
 		list = list->next;
 		free(tmp);
@@ -99,7 +102,7 @@ char				**list_to_map(t_list *list)
 	return (map);
 }
 
-char				**ft_open_file(char *file)
+char	**ft_open_file(char *file)
 {
 	int		fd;
 	t_list	*list;
@@ -115,7 +118,7 @@ char				**ft_open_file(char *file)
 	return (map);
 }
 
-int					proc_resolution(t_conf *config)
+int	proc_resolution(t_conf *config)
 {
 	char	*line;
 	int		i;
@@ -136,7 +139,7 @@ int					proc_resolution(t_conf *config)
 	return (0);
 }
 
-int					proc_textures(t_conf *config)
+int	proc_textures(t_conf *config)
 {
 	char	*line;
 	char	**tmp;
@@ -164,7 +167,7 @@ int					proc_textures(t_conf *config)
 	return (0);
 }
 
-int					proc_colors(t_conf *config)
+int	proc_colors(t_conf *config)
 {
 	char			*line;
 	unsigned int	*tmp;
@@ -192,7 +195,7 @@ int					proc_colors(t_conf *config)
 	return (0);
 }
 
-int					proc_map(t_conf *config)
+int	proc_map(t_conf *config)
 {
 	int	i;
 
@@ -205,7 +208,7 @@ int					proc_map(t_conf *config)
 	return (0);
 }
 
-int					parser(t_conf *config)
+int	parser(t_conf *config)
 {
 	char	**map;
 
@@ -225,7 +228,7 @@ int					parser(t_conf *config)
 	return (1);
 }
 
-int					main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_conf	config;
 	t_pers	plr;
@@ -240,7 +243,7 @@ int					main(int argc, char **argv)
 		if (!ft_strncmp("--save", argv[2], 6))
 			config.s_shot_flag = 1;
 	}
-	if ((argc != 2 & argc != 3) || !ft_strnstr(argv[1] + ft_strlen(argv[1]) - 4,
+	if ((argc != 2 & argc != 3) || !ft_strnstr(argv[1] + ft_strlen(argv[1]) - 4, \
 											".cub", ft_strlen(argv[1])))
 		err_exit(11);
 	else

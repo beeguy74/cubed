@@ -6,74 +6,49 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 17:21:40 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/17 17:38:11 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 14:13:08 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
 
-//sort algorithm
-//sort the sprites based on distance
-/*
-void	sortSprites(int* order, double* dist, int amount)
+void	sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas)
 {
-  std::vector<std::pair<double, int>> sprites(amount);
-  for(int i = 0; i < amount; i++) {
-    sprites[i].first = dist[i];
-    sprites[i].second = order[i];
-  }
-  std::sort(sprites.begin(), sprites.end());
-  // restore in reverse order to go from farthest to nearest
-  for(int i = 0; i < amount; i++) {
-    dist[i] = sprites[amount - i - 1].first;
-    order[i] = sprites[amount - i - 1].second;
-  }
-}
-
-void	sprite_sort(t_conf* config, t_pers *plr, t_sprite **sprite_mas)
-{
-  return ;
-}
-*/
-void  sprite_dist_calc(t_conf* config, t_pers *plr, t_sprite **sprite_mas)
-{
-  int		i;
+	int		i;
 
 	i = 0;
 	config->sprite_order = malloc(sizeof(int) * config->sprite_num);
-  if (config->sprite_order == NULL)
-    err_exit(0);
+	if (config->sprite_order == NULL)
+		err_exit(0);
 	if (plr && sprite_mas) 
-  {
-    while (i < config->sprite_num)
-    {
-      config->sprite_order[i] = i;
-      sprite_mas[i]->dist = ((plr->pos.x - sprite_mas[i]->pos_x) *
-                  (plr->pos.x - sprite_mas[i]->pos_x) +
-                    (plr->pos.y - sprite_mas[i]->pos_y) *
-                      (plr->pos.y - sprite_mas[i]->pos_y));
-      
-      i++;
-      //sqrt not taken, unneeded
-    }
-  }
+	{
+		while (i < config->sprite_num)
+		{
+			config->sprite_order[i] = i;
+			sprite_mas[i]->dist = ((plr->pos.x - sprite_mas[i]->pos_x) *\
+									(plr->pos.x - sprite_mas[i]->pos_x) +\
+									(plr->pos.y - sprite_mas[i]->pos_y) *\
+									(plr->pos.y - sprite_mas[i]->pos_y));
+			i++;
+		}
+	}
 }
 
 void sprite_sort(t_conf *config, t_sprite **sprite_mas)
 {
-  int       i;
-  int       j;
-  int       tmp;
-  t_sprite  *s_tmp;
+int       i;
+int       j;
+int       tmp;
+t_sprite  *s_tmp;
 
-  i = 0;
-  tmp = 0;
-  s_tmp = 0;
-  while (i < config->sprite_num)
-  {
-    j = 0;
-    while (j < config->sprite_num)
-    {
+i = 0;
+tmp = 0;
+s_tmp = 0;
+while (i < config->sprite_num)
+{
+j = 0;
+while (j < config->sprite_num)
+{
       if (sprite_mas[i]->dist > sprite_mas[j]->dist)
       {
   //      tmp = config->sprite_order[i];
