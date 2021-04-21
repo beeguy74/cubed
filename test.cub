@@ -1,4 +1,4 @@
-R 74000 480000
+R 1920 1024
 NO ./greystone.xpm
 SO ./purplestone.xpm
 WE ./wood.xpm

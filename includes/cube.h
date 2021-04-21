@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 13:22:09 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 16:37:18 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ typedef struct		s_conf
 	int				res_x;
 	int				res_y;
 	int				sprite_num;
-	int				*sprite_order;
 	char			*no;
 	char			*so;
 	char			*we;

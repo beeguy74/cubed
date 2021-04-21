@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 17:21:40 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 14:13:08 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 16:37:18 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,10 @@ void	sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas)
 	int		i;
 
 	i = 0;
-	config->sprite_order = malloc(sizeof(int) * config->sprite_num);
-	if (config->sprite_order == NULL)
-		err_exit(0);
 	if (plr && sprite_mas) 
 	{
 		while (i < config->sprite_num)
 		{
-			config->sprite_order[i] = i;
 			sprite_mas[i]->dist = ((plr->pos.x - sprite_mas[i]->pos_x) *\
 									(plr->pos.x - sprite_mas[i]->pos_x) +\
 									(plr->pos.y - sprite_mas[i]->pos_y) *\
@@ -51,9 +47,6 @@ while (j < config->sprite_num)
 {
       if (sprite_mas[i]->dist > sprite_mas[j]->dist)
       {
-  //      tmp = config->sprite_order[i];
-    //    config->sprite_order[i] = config->sprite_order[j];
-      //  config->sprite_order[j] = tmp;
           s_tmp = sprite_mas[i];
           sprite_mas[i] = sprite_mas[j];
           sprite_mas[j] = s_tmp;
@@ -140,4 +133,5 @@ void	draw_sprite(t_vars *vars, double *z_buffer)
   {
     sprite_cam_pos_calc(vars->config, vars->plr, vars->config->sprite_mas[i++], vars->file->sprite, z_buffer, vars);
   }
+  free(z_buffer);
 }

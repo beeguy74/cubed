@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:06:16 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 12:52:58 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/21 16:25:10 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	create_bmp_image(t_conf *config, t_data *img, int fd)
 		end_lines -= img->line_length;
 	}
 	write(fd, buf, config->res_x * config->res_y * 4);
+	free(buf);
 }
 
 void	create_bmp_header(t_conf *config, int fd)
