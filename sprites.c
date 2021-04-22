@@ -6,121 +6,103 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 17:21:40 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 17:08:54 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 13:49:37 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
 
-void	sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas)
+//spr_mas_x and _y translate sprite position to relative to camera
+//inv_det required for correct matrix multiplication
+//transf_x _y transform sprite with the inverse camera matrix
+//transf_y this is actually the depth inside the screen, that what Z is in 3D
+//calculate height of the sprite on screen
+//using 'spr_calc->transf_y' instead of the real distance prevents fisheye
+//calculate lowest and highest pixel to fill in current spr_calc->start_x
+//calculate width of the sprite
+
+void	sprite_to_camera(t_sprite *sprite_mas, \
+										t_spr_calc *spr_calc,	t_vars *vars)
 {
-	int		i;
+	double	inv_det;
+	double	transf_x;
 
-	i = 0;
-	if (plr && sprite_mas)
-	{
-		while (i < config->sprite_num)
-		{
-			sprite_mas[i]->dist = ((plr->pos.x - sprite_mas[i]->pos_x) * \
-									(plr->pos.x - sprite_mas[i]->pos_x) + \
-									(plr->pos.y - sprite_mas[i]->pos_y) * \
-									(plr->pos.y - sprite_mas[i]->pos_y));
-			i++;
-		}
-	}
-}
-
-void	sprite_sort(t_conf *config, t_sprite **sprite_mas)
-{
-	int			i;
-	int			j;
-	int			tmp;
-	t_sprite	*s_tmp;
-
-	i = 0;
-	tmp = 0;
-	s_tmp = 0;
-	while (i < config->sprite_num)
-	{
-		j = 0;
-		while (j < config->sprite_num)
-		{
-			if (sprite_mas[i]->dist > sprite_mas[j]->dist)
-			{
-				s_tmp = sprite_mas[i];
-				sprite_mas[i] = sprite_mas[j];
-				sprite_mas[j] = s_tmp;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-void	sprite_cam_pos_calc(t_sprite *sprite_mas, t_text *sprite, double *z_buffer, \
-									t_vars *vars)
-{
-	//translate sprite position to relative to camera
 	sprite_mas->x = sprite_mas->pos_x - vars->plr->pos.x;
 	sprite_mas->y = sprite_mas->pos_y - vars->plr->pos.y;
+	inv_det = 1.0 / (vars->plr->cam.x * vars->plr->sight.y - \
+							vars->plr->sight.x * vars->plr->cam.y);
+	transf_x = inv_det * (vars->plr->sight.y * sprite_mas->x - \
+								vars->plr->sight.x * sprite_mas->y);
+	spr_calc->transf_y = inv_det * (-vars->plr->cam.y * sprite_mas->x + \
+										vars->plr->cam.x * sprite_mas->y);
+	spr_calc->spr_screen_x = (int)((vars->config->res_x / 2) * \
+								(1. + transf_x / spr_calc->transf_y));
+	spr_calc->spr_height = abs((int)(vars->config->res_y / \
+												(spr_calc->transf_y)));
+}
 
-	//transform sprite with the inverse camera matrix
+void	draw_borders_calc(t_spr_calc *spr_calc,	t_vars *vars)
+{
+	spr_calc->start_y = -spr_calc->spr_height / 2 + vars->config->res_y / 2;
+	if (spr_calc->start_y < 0)
+		spr_calc->start_y = 0;
+	spr_calc->end_y = spr_calc->spr_height / 2 + vars->config->res_y / 2;
+	if (spr_calc->end_y >= vars->config->res_y)
+		spr_calc->end_y = vars->config->res_y - 1;
+	spr_calc->spr_width = abs((int)(vars->config->res_y / \
+											(spr_calc->transf_y)));
+	spr_calc->start_x = -spr_calc->spr_width / 2 + spr_calc->spr_screen_x;
+	if (spr_calc->start_x < 0)
+		spr_calc->start_x = 0;
+	spr_calc->end_x = spr_calc->spr_width / 2 + spr_calc->spr_screen_x;
+	if (spr_calc->end_x >= vars->config->res_x)
+		spr_calc->end_x = vars->config->res_x - 1;
+}
 
-	double invDet = 1.0 / (vars->plr->cam.x * vars->plr->sight.y - vars->plr->sight.x * vars->plr->cam.y); //required for correct matrix multiplication
+//the conditions in the if are:
+//1) it's in front of camera plane so you don't see things behind you
+//2) it's on the screen (left)
+//3) it's on the screen (right)
+//4) ZBuffer, with perpendicular distance
+void	sprite_pixel_put(t_text *sprite, t_spr_calc *spr_calc,	t_vars *vars)
+{
+	int	*sprite_img;
+	int	tex_x;
+	int	tex_y;
+	int	color;
+	int	y;
 
-	double transformX = invDet * (vars->plr->sight.y * sprite_mas->x - vars->plr->sight.x * sprite_mas->y);
-	double transformY = invDet * (-vars->plr->cam.y * sprite_mas->x + vars->plr->cam.x * sprite_mas->y); //this is actually the depth inside the screen, that what Z is in 3D
-
-	int spriteScreenX = (int)((vars->config->res_x / 2) * (1. + transformX / transformY));
-
-	//calculate height of the sprite on screen
-	int spriteHeight = abs((int)(vars->config->res_y / (transformY))); //using 'transformY' instead of the real distance prevents fisheye
-	//calculate lowest and highest pixel to fill in current stripe
-	int drawStartY = -spriteHeight / 2 + vars->config->res_y / 2;
-	if(drawStartY < 0)
-		drawStartY = 0;
-	int drawEndY = spriteHeight / 2 + vars->config->res_y / 2;
-	if(drawEndY >= vars->config->res_y)
-		drawEndY = vars->config->res_y - 1;
-
-	//calculate width of the sprite
-	int spriteWidth = abs((int)(vars->config->res_y / (transformY)));
-	int drawStartX = -spriteWidth / 2 + spriteScreenX;
-	if(drawStartX < 0)
-		drawStartX = 0;
-	int drawEndX = spriteWidth / 2 + spriteScreenX;
-	if(drawEndX >= vars->config->res_x)
-		drawEndX = vars->config->res_x - 1;
-	int *sprite_img = (int*)sprite->img->addr; //cast to int* cuz need int color
-	//loop through every vertical stripe of the sprite on screen
-	for(int stripe = drawStartX; stripe < drawEndX; stripe++)
+	sprite_img = (int*)sprite->img->addr;
+	while (spr_calc->start_x < spr_calc->end_x)
 	{
-		int texX = (int)(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * sprite->width / spriteWidth) / 256;
-		//the conditions in the if are:
-		//1) it's in front of camera plane so you don't see things behind you
-		//2) it's on the screen (left)
-		//3) it's on the screen (right)
-		//4) ZBuffer, with perpendicular distance
-		if(transformY > 0 && stripe > 0 && stripe < vars->config->res_x && transformY < z_buffer[stripe])
+		tex_x = (int)(256 * (spr_calc->start_x - (-spr_calc->spr_width / 2 + \
+		spr_calc->spr_screen_x)) * sprite->width / spr_calc->spr_width) / 256;
+		if (spr_calc->transf_y > 0 && spr_calc->start_x > 0 && spr_calc->start_x < vars->config->res_x && spr_calc->transf_y < spr_calc->z_buffer[spr_calc->start_x])
 		{
-			for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
+			y = spr_calc->start_y;
+			while (y < spr_calc->end_y) //for every pixel of the current spr_calc->start_x
 			{
-			int d = (y) * 256 - vars->config->res_y * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-			int texY = ((d * sprite->height) / spriteHeight) / 256;
-			//Uint32 color = texture[sprite_mas->pos_texture][sprite->width * texY + texX]; //get current color from the texture
-			//Uint32 color = texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
-			int color = sprite_img[sprite->width * texY + texX];
-			//buffer[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
-			if((color & 0x00FFFFFF) != 0)
-				my_mlx_pixel_put(vars->img, stripe, y, color);
+				int d = (y) * 256 - vars->config->res_y * 128 + spr_calc->spr_height * 128; //256 and 128 factors to avoid floats
+				tex_y = ((d * sprite->height) / spr_calc->spr_height) / 256;
+				//Uint32 color = texture[sprite_mas->pos_texture][sprite->width * tex_y + tex_x]; //get current color from the texture
+				//Uint32 color = texture[sprite[spriteOrder[i]].texture][texWidth * tex_y + tex_x]; //get current color from the texture
+				color = sprite_img[sprite->width * tex_y + tex_x];
+				//buffer[y][spr_calc->start_x] = color; //paint pixel if it isn't black, black is the invisible color
+				if ((color & 0x00FFFFFF) != 0)
+					my_mlx_pixel_put(vars->img, spr_calc->start_x, y, color);
+				y++;
 			}
 		}
+		spr_calc->start_x++;
 	}
 }
 
 void	draw_sprite(t_vars *vars, double *z_buffer)
 {
-	int i;
+	int			i;
+	t_spr_calc	spr_calc;
+
+	spr_calc_init(&spr_calc, z_buffer);
 	//SPRITE CASTING
 	sprite_dist_calc(vars->config, vars->plr, vars->config->sprite_mas);
 	//sort sprites from far to close
@@ -129,7 +111,9 @@ void	draw_sprite(t_vars *vars, double *z_buffer)
 	i = 0;
 	while (i < vars->config->sprite_num)
 	{
-		sprite_cam_pos_calc(vars->config->sprite_mas[i++], vars->file->sprite, z_buffer, vars);
+		sprite_to_camera(vars->config->sprite_mas[i++], &spr_calc, vars);
+		draw_borders_calc(&spr_calc, vars);
+		sprite_pixel_put(vars->file->sprite, &spr_calc, vars);
 	}
 	free(z_buffer);
 }

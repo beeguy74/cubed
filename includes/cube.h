@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 16:37:18 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 12:49:11 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,20 @@ typedef struct	s_files
 	t_text		*sprite;
 }				t_files;
 
+typedef struct	s_spr_calc
+{
+	double		*z_buffer;
+	double		transf_y;
+	int			spr_screen_x;
+	int			spr_height;
+	int			spr_width;
+	int			start_y;
+	int			end_y;
+	int			start_x;
+	int			end_x;
+}				t_spr_calc;
+
+
 typedef struct	s_vars
 {
 	void		*mlx;
@@ -145,5 +159,8 @@ void				err_exit(int err);
 void				text_collect(t_vars *vars);
 void				ft_bmp(t_data *img, t_conf *config, char *file_name);
 void				find_sprites(t_conf *config);
+void				spr_calc_init(t_spr_calc *spr_calc, double *z_buffer);
+void				sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas);
+void				sprite_sort(t_conf *config, t_sprite **sprite_mas);
 
 #endif
