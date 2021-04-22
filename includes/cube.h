@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/22 15:13:46 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 16:36:53 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include <math.h>
 #include "get_next_line.h"
 
-# define SCALE 10
 
 typedef struct		s_vect
 {
@@ -74,6 +73,7 @@ typedef struct		s_conf
 	int				s_shot_flag;
 	int				res_x;
 	int				res_y;
+	int				scale;
 	int				sprite_num;
 	char			*no;
 	char			*so;

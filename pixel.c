@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 16:13:37 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 16:46:26 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,15 @@ void	square_put(t_data *img, t_point *point, int len, int color)
 	int			j;
 
 	i = 0;
-	if (len <= 0)
-		len = 1;
+	if (len < 6)
+		return ;
 	while (i < len)
 	{
 		j = 0;
 		while (j < len)
 		{
-			my_mlx_pixel_put(img, point->x * SCALE + i, \
-					point->y * SCALE + j, color);
+			my_mlx_pixel_put(img, point->x * len + i, \
+					point->y * len + j, color);
 			j++;
 		}
 		i++;
@@ -47,15 +47,17 @@ int	drow_map(t_vars *vars)
 	t_point	point;
 
 	point.y = 0;
+	if (vars->config->scale < 6)
+		return (0);
 	while (vars->config->link_map[point.y] != NULL)
 	{
 		point.x = 0;
 		while (vars->config->link_map[point.y][point.x] != '\0')
 		{
 			if (vars->config->link_map[point.y][point.x] == '1')
-				square_put(vars->img, &point, 10, 0x00FF0000);
+				square_put(vars->img, &point, vars->config->scale, 0x00FF0000);
 			if (ft_strchr("02SNWE", vars->config->link_map[point.y][point.x]))
-				square_put(vars->img, &point, 10, 0x0000FF00);
+				square_put(vars->img, &point, vars->config->scale, 0x0000FF00);
 			point.x++;
 		}
 		point.y++;
@@ -67,8 +69,10 @@ int	drow_plr(t_vars *vars)
 {
 	t_point	point;
 
-	point.y = (int)(vars->plr->pos.y * SCALE);
-	point.x = (int)(vars->plr->pos.x * SCALE);
+	if (vars->config->scale < 6)
+		return (0);
+	point.y = (int)(vars->plr->pos.y * vars->config->scale);
+	point.x = (int)(vars->plr->pos.x * vars->config->scale);
 	my_mlx_pixel_put(vars->img, point.x, point.y, 0x000000FF);
 	return (0);
 }
@@ -199,6 +203,13 @@ void	do_screen_size(void *mlx, t_conf *config)
 		config->res_x = screen_x;
 	if (screen_y < config->res_y)
 		config->res_y = screen_y;
+	config->scale = (config->res_x + config->res_y) / 100;
+	if (config->scale >= 6 && config->scale <= 10)
+		config->scale = 6;
+	else if (config->scale < 6)
+		config->scale = 0;
+	else
+		config->scale = 10;
 }
 
 int	painting(t_conf *config, t_pers *plr)
