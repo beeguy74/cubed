@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 12:32:03 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/22 13:09:37 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 15:47:27 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	spr_calc_init(t_spr_calc *spr_calc, double *z_buffer)
 	spr_calc->end_y = 0;
 	spr_calc->start_x = 0;
 	spr_calc->end_x = 0;
+	spr_calc->tex_x = 0;
+	spr_calc->tex_y = 0;
 }
 
 void	sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas)

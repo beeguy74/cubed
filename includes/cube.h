@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/22 12:49:11 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 15:13:46 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ typedef struct	s_spr_calc
 	int			end_y;
 	int			start_x;
 	int			end_x;
+	int			tex_x;
+	int			tex_y;
 }				t_spr_calc;
 
 

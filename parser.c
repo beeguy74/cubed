@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 16:32:29 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/22 15:55:46 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,7 @@ int	main(int argc, char **argv)
 	flag += parser(&config);
 	flag += find_plr(&plr, config.link_map);
 	flag += check_map(config.link_map, &plr);
-	painting(&config, &plr);
+	if (flag == 0)
+		painting(&config, &plr);
 	return (0);
 }

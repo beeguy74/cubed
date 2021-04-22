@@ -6,7 +6,7 @@
 #    By: tphung <tphung@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/19 18:37:57 by tphung            #+#    #+#              #
-#    Updated: 2021/04/22 12:46:25 by tphung           ###   ########.fr        #
+#    Updated: 2021/04/22 15:50:59 by tphung           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRCS = parser.c pixel.c find_player.c flood_map.c raycast.c texture.c bitmap.c\
 	   sprites.c sprites_utils.c\
 	   srcs/get_next_line.c srcs/get_next_line_utils.c
 OBJ = $(SRCS:.c=.o)
-NAME = cub3d
+NAME = cub3D
 LIBFT = libft.a
 LIBFT_DIR = srcs/libft/
 MLX = libmlx.dylib
