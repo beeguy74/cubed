@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/22 16:36:53 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 15:33:57 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,9 @@ typedef struct	s_calc
 
 void				draw_sprite(t_vars *vars, double *z_buffer);
 void				my_mlx_pixel_put(t_data *data, int x, int y,\
-		unsigned int color);
+												unsigned int color);
+void				square_put(t_data *img, t_point *point, \
+												int len, int color);
 int					flood_fill(char **map, int x, int y);
 int					check_map(char **map, t_pers *plr);
 int					find_plr(t_pers *plr, char **map);
@@ -164,5 +166,13 @@ void				find_sprites(t_conf *config);
 void				spr_calc_init(t_spr_calc *spr_calc, double *z_buffer);
 void				sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas);
 void				sprite_sort(t_conf *config, t_sprite **sprite_mas);
+int					ray_init_calc(t_rays *ray, t_pers *plr, double x_cam);
+int					ray_side_calc(t_rays *ray, t_pers *plr);
+t_text				*ch_text(t_rays *ray, t_files *file);
+int					key_events(int keycode, t_vars *vars);
+int					win_close(int keycode, t_vars *vars);
+void				floor_ceiling(t_vars *vars);
+void				do_screen_size(void *mlx, t_conf *config);
+void				square_put(t_data *img, t_point *point, int len, int color);
 
 #endif
