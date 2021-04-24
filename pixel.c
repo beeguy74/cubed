@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/22 16:46:26 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 12:35:39 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,8 @@ void	do_screen_size(void *mlx, t_conf *config)
 	if (screen_y < config->res_y)
 		config->res_y = screen_y;
 	config->scale = (config->res_x + config->res_y) / 100;
+	if (config->res_x < 1 || config->res_y < 1)
+		err_exit(11);
 	if (config->scale >= 6 && config->scale <= 10)
 		config->scale = 6;
 	else if (config->scale < 6)
@@ -219,6 +221,7 @@ int	painting(t_conf *config, t_pers *plr)
 
 	vars = (t_vars){.config = config, .plr = plr, .img = &img,
 		.mlx = mlx_init()};
+	errno = 0;
 	do_screen_size(vars.mlx, vars.config);
 	if (config->s_shot_flag == 0)
 		vars.win = mlx_new_window(vars.mlx, config->res_x, config->res_y,

@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 13:36:08 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 13:05:10 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 13:41:38 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ char	**copy_map(char **map)
 
 int	flood_fill(char **map, int x, int y)
 {
+	if (ft_strlen(map[y]) < x)
+		return (1);
 	if (map[y][x] == '5' || map[y][x] == '1')
 		return (0);
 	if (!ft_strchr("02NSWE", map[y][x]))
@@ -111,5 +113,7 @@ int	check_map(char **map, t_pers *plr)
 	while (copy[i] != 0)
 		free(copy[i++]);
 	free(copy);
+	if (flag != 0)
+		err_exit(11);
 	return (flag);
 }
