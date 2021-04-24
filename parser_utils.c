@@ -6,12 +6,11 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 17:07:49 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 18:41:06 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
-#include "includes/libft.h"
 
 int	check_digi_args(char *line, char sep, int num)
 {

@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 17:18:03 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 18:43:11 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 # define CUBE_H
 
 # include <unistd.h>
-# include <stdlib.h>
 # include <fcntl.h>
-# include <stdio.h>
 # include <string.h>
 # include <errno.h>
 # include "mlx.h"

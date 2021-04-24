@@ -6,12 +6,11 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 15:58:39 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 18:41:06 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
-#include "includes/libft.h"
 
 int	proc_resolution(t_conf *config)
 {
@@ -116,7 +115,6 @@ int	main(int argc, char **argv)
 {
 	t_conf	config;
 	t_pers	plr;
-	char	**map;
 	int		flag;
 
 	flag = 0;
@@ -124,15 +122,16 @@ int	main(int argc, char **argv)
 	config.s_shot_flag = 0;
 	if (argc == 3)
 	{
-		if (!ft_strncmp("--save", argv[2], 6))
+		if (!ft_strncmp("--save", argv[2], 7))
 			config.s_shot_flag = 1;
+		else
+			err_exit(11);
 	}
 	if ((argc != 2 & argc != 3) || !ft_strnstr(argv[1] + ft_strlen(argv[1]) - 4, \
 											".cub", ft_strlen(argv[1])))
 		err_exit(11);
 	else
 		config.map = ft_open_file(argv[1]);
-	map = config.map;
 	flag += parser(&config);
 	flag += find_plr(&plr, config.link_map);
 	flag += check_map(config.link_map, &plr);

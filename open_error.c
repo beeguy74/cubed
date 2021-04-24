@@ -6,12 +6,11 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/24 15:52:55 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 15:52:57 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 18:41:06 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/cube.h"
-#include "includes/libft.h"
 
 void	ft_putstr(void *data)
 {
