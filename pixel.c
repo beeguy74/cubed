@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:49:52 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 12:35:39 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 15:00:48 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	plr_move(int keycode, t_vars *vars)
 
 	m_speed = 0.2;
 	map = vars->config->map;
-	if (keycode == 125)
+	if (keycode == 125 || keycode == 1)
 	{
 		if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x - \
 									vars->plr->sight.x * m_speed)] != '1')
@@ -139,7 +139,7 @@ int	plr_move(int keycode, t_vars *vars)
 								m_speed)][(int)(vars->plr->pos.x)] != '1')
 			vars->plr->pos.y -= vars->plr->sight.y * m_speed;
 	}
-	if (keycode == 126)
+	if (keycode == 126 || keycode == 13)
 	{
 		if (map[(int)(vars->plr->pos.y)][(int)(vars->plr->pos.x + \
 							vars->plr->sight.x * m_speed)] != '1')
@@ -180,10 +180,48 @@ int	plr_rotate(int keycode, t_pers *plr)
 	return (0);
 }
 
+void	plr_left(t_vars *vars)
+{
+	double	x;
+	double	y;
+	double	m_speed;
+	char	**map;
+
+	m_speed = 0.2;
+	map = vars->config->map;
+	x = vars->plr->pos.x + vars->plr->sight.y * m_speed;
+	y = vars->plr->pos.y - vars->plr->sight.x * m_speed;
+	if (!ft_strchr("1", map[(int)vars->plr->pos.y][(int)x]))
+		vars->plr->pos.x = x;
+	if (!ft_strchr("1", map[(int)y][(int)vars->plr->pos.x]))
+		vars->plr->pos.y = y;
+}
+
+void	plr_right(t_vars *vars)
+{
+	double	x;
+	double	y;
+	double	m_speed;
+	char	**map;
+
+	m_speed = 0.2;
+	map = vars->config->map;
+	x = vars->plr->pos.x - vars->plr->sight.y * m_speed;
+	y = vars->plr->pos.y + vars->plr->sight.x * m_speed;
+	if (!ft_strchr("1", map[(int)vars->plr->pos.y][(int)x]))
+		vars->plr->pos.x = x;
+	if (!ft_strchr("1", map[(int)y][(int)vars->plr->pos.x]))
+		vars->plr->pos.y = y;
+}
+
 int	key_events(int keycode, t_vars *vars)
 {
-	if (keycode > 124 && keycode < 127)
+	if (keycode == 125 || keycode == 126 || keycode == 13 || keycode == 1)
 		plr_move(keycode, vars);
+	if (keycode == 0)
+		plr_left(vars);
+	if (keycode == 2)
+		plr_right(vars);
 	if (keycode > 122 && keycode < 125)
 		plr_rotate(keycode, vars->plr);
 	if (keycode == 53)
