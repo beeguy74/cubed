@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 15:33:57 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 16:00:40 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,5 +174,11 @@ int					win_close(int keycode, t_vars *vars);
 void				floor_ceiling(t_vars *vars);
 void				do_screen_size(void *mlx, t_conf *config);
 void				square_put(t_data *img, t_point *point, int len, int color);
+char				**ft_open_file(char *file);
+int					check_digi_args(char *line, char sep, int num);
+int					do_atoi(char *line);
+int					check_param(char **map);
+int					proc_map(t_conf *config);
+int					count_right_params(char *where, char *what);
 
 #endif

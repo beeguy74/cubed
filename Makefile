@@ -6,7 +6,7 @@
 #    By: tphung <tphung@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/19 18:37:57 by tphung            #+#    #+#              #
-#    Updated: 2021/04/24 15:34:38 by tphung           ###   ########.fr        #
+#    Updated: 2021/04/24 15:58:58 by tphung           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ FLAGS = -c -Wall -Wextra -Werror -g
 AR = ar
 ARFLAGS = rcs
 
-SRCS = parser.c pixel.c pixel_utils.c key_working.c\
+SRCS = parser.c parser_utils.c open_error.c\
+		pixel.c pixel_utils.c key_working.c\
 		find_player.c flood_map.c \
 		raycast.c raycast_utils.c\
 		texture.c bitmap.c\
