@@ -6,45 +6,44 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 13:54:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 16:00:40 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 17:18:03 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUBE_H
 # define CUBE_H
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include "mlx.h"
-#include "libft.h"
-#include <math.h>
-#include "get_next_line.h"
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <stdio.h>
+# include <string.h>
+# include <errno.h>
+# include "mlx.h"
+# include "libft.h"
+# include <math.h>
+# include "get_next_line.h"
 
-
-typedef struct		s_vect
+typedef struct s_vect
 {
 	double			y;
 	double			x;
 }					t_vect;
 
-typedef struct		s_point
+typedef struct s_point
 {
 	int				y;
 	int				x;
 }					t_point;
 
-typedef struct		s_pers
+typedef struct s_pers
 {
 	t_vect			pos;
 	t_vect			sight;
 	t_vect			cam;
-}					t_pers;
+}				t_pers;
 
-typedef struct		s_rays
+typedef struct s_rays
 {
 	double			wall_dist;
 	t_vect			dir;
@@ -57,9 +56,9 @@ typedef struct		s_rays
 	int				line_height;
 	int				hit_side;
 	int				hit;
-}					t_rays;
+}				t_rays;
 
-typedef struct	s_sprite
+typedef struct s_sprite
 {
 	double		pos_x;
 	double		pos_y;
@@ -68,7 +67,7 @@ typedef struct	s_sprite
 	double		y;
 }				t_sprite;
 
-typedef struct		s_conf
+typedef struct s_conf
 {
 	int				s_shot_flag;
 	int				res_x;
@@ -85,9 +84,9 @@ typedef struct		s_conf
 	unsigned int	floor_col;
 	unsigned int	ceil_col;
 	t_sprite		**sprite_mas;
-}					t_conf;
+}				t_conf;
 
-typedef	struct	s_data
+typedef struct s_data
 {
 	char		*addr;
 	int			bits_per_pixel;
@@ -96,14 +95,14 @@ typedef	struct	s_data
 	void		*img;
 }				t_data;
 
-typedef struct	s_text
+typedef struct s_text
 {
 	t_data		*img;
 	int			width;
 	int			height;
 }				t_text;
 
-typedef struct	s_files
+typedef struct s_files
 {
 	t_text		*n_text;
 	t_text		*s_text;
@@ -112,7 +111,7 @@ typedef struct	s_files
 	t_text		*sprite;
 }				t_files;
 
-typedef struct	s_spr_calc
+typedef struct s_spr_calc
 {
 	double		*z_buffer;
 	double		transf_y;
@@ -127,8 +126,7 @@ typedef struct	s_spr_calc
 	int			tex_y;
 }				t_spr_calc;
 
-
-typedef struct	s_vars
+typedef struct s_vars
 {
 	void		*mlx;
 	void		*win;
@@ -139,18 +137,18 @@ typedef struct	s_vars
 	t_rays		*ray;
 }				t_vars;
 
-typedef struct	s_calc
+typedef struct s_calc
 {
-	double		wall_x; //where exactly the wall was hit
-	double		step; // How much to increase the texture coordinate per screen pixel
-	double		tex_pos; // Starting texture coordinate
-	int			tex_x; //x coordinate on the texture
+	double		wall_x;
+	double		step;
+	double		tex_pos;
+	int			tex_x;
 	int			color;
 	int			tex_y;
 }				t_calc;
 
 void				draw_sprite(t_vars *vars, double *z_buffer);
-void				my_mlx_pixel_put(t_data *data, int x, int y,\
+void				my_mlx_pixel_put(t_data *data, int x, int y, \
 												unsigned int color);
 void				square_put(t_data *img, t_point *point, \
 												int len, int color);
@@ -164,7 +162,8 @@ void				text_collect(t_vars *vars);
 void				ft_bmp(t_data *img, t_conf *config, char *file_name);
 void				find_sprites(t_conf *config);
 void				spr_calc_init(t_spr_calc *spr_calc, double *z_buffer);
-void				sprite_dist_calc(t_conf *config, t_pers *plr, t_sprite **sprite_mas);
+void				sprite_dist_calc(t_conf *config, t_pers *plr, \
+											t_sprite **sprite_mas);
 void				sprite_sort(t_conf *config, t_sprite **sprite_mas);
 int					ray_init_calc(t_rays *ray, t_pers *plr, double x_cam);
 int					ray_side_calc(t_rays *ray, t_pers *plr);

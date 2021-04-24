@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 19:15:46 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 15:58:39 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 17:07:49 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,6 @@ int	check_param(char **map)
 	}
 	return (i);
 }
-
-
 
 int	proc_map(t_conf *config)
 {

@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 16:50:17 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/21 12:55:29 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 17:54:18 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	plr_position(t_pers *plr, char **map)
 		}
 		y++;
 	}
+	if (plr->pos.x == 0.5 || plr->pos.y == 0.5)
+		err_exit(11);
 	return (0);
 }
 
@@ -83,7 +85,7 @@ int	find_plr(t_pers *plr, char **map)
 	plr->pos.x = 0.5;
 	plr->pos.y = 0.5;
 	if (plr_position(plr, map))
-		err_exit(12);
+		err_exit(11);
 	old_cam_x = plr->cam.x;
 	old_sight_x = plr->sight.x;
 	plr->sight.x = plr->sight.x * cos(-0.001) \

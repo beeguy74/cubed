@@ -6,7 +6,7 @@
 /*   By: tphung <tphung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 13:36:08 by tphung            #+#    #+#             */
-/*   Updated: 2021/04/24 13:41:38 by tphung           ###   ########.fr       */
+/*   Updated: 2021/04/24 18:23:12 by tphung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,20 @@ char	**copy_map(char **map)
 
 int	flood_fill(char **map, int x, int y)
 {
-	if (ft_strlen(map[y]) < x)
-		return (1);
+	if (!map[y] || !map[y][x])
+		err_exit(11);
+	if (!ft_strchr("0125WESN", map[y][x]))
+		err_exit(11);
 	if (map[y][x] == '5' || map[y][x] == '1')
 		return (0);
-	if (!ft_strchr("02NSWE", map[y][x]))
-		return (1);
 	else
 		map[y][x] = '5';
-	return (flood_fill(map, x + 1, y) || flood_fill(map, x - 1, y) || \
-			flood_fill(map, x, y + 1) || flood_fill(map, x, y - 1));
+	if (!flood_fill(map, x + 1, y) \
+			&& !flood_fill(map, x - 1, y) \
+			&& !flood_fill(map, x, y + 1) \
+			&& !flood_fill(map, x, y - 1))
+		return (0);
+	return (-1);
 }
 
 int	check_map(char **map, t_pers *plr)
@@ -108,12 +112,10 @@ int	check_map(char **map, t_pers *plr)
 	flag = 0;
 	i = 0;
 	copy = copy_map(map);
-	if (flood_fill(copy, plr->pos.x, plr->pos.y))
-		flag = 1;
+	if (flood_fill(copy, plr->pos.x, plr->pos.y) < 0)
+		err_exit(11);
 	while (copy[i] != 0)
 		free(copy[i++]);
 	free(copy);
-	if (flag != 0)
-		err_exit(11);
 	return (flag);
 }

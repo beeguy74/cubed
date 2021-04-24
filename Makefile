@@ -6,7 +6,7 @@
 #    By: tphung <tphung@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/19 18:37:57 by tphung            #+#    #+#              #
-#    Updated: 2021/04/24 15:58:58 by tphung           ###   ########.fr        #
+#    Updated: 2021/04/24 17:58:26 by tphung           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,12 +46,13 @@ $(NAME): $(OBJ)
 
 clean:
 		rm -rf $(OBJ)
+		rm -rf $(LIBFT)
+		rm -rf $(MLX)
 		make clean -C $(LIBFT_DIR)
 		make clean -C $(MLX_DIR)
 
 fclean: clean
 		rm -rf $(NAME)
 		make fclean -C $(LIBFT_DIR)
-		make fclean -C $(MLX_DIR)
 
 re: fclean all
