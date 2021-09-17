@@ -15,13 +15,14 @@ FLAGS = -c -Wall -Wextra -Werror -g
 AR = ar
 ARFLAGS = rcs
 
-SRCS = parser.c parser_utils.c open_error.c\
-		pixel.c pixel_utils.c key_working.c\
-		find_player.c flood_map.c \
-		raycast.c raycast_utils.c\
-		texture.c bitmap.c\
-		sprites.c sprites_utils.c\
-		srcs/get_next_line.c srcs/get_next_line_utils.c
+SRCPATH = srcs/
+SRCS =  $(SRCPATH)parser.c  $(SRCPATH)parser_utils.c  $(SRCPATH)open_error.c\
+		 $(SRCPATH)pixel.c  $(SRCPATH)pixel_utils.c  $(SRCPATH)key_working.c\
+		 $(SRCPATH)find_player.c  $(SRCPATH)flood_map.c \
+		 $(SRCPATH)raycast.c  $(SRCPATH)raycast_utils.c\
+		 $(SRCPATH)texture.c  $(SRCPATH)bitmap.c\
+		 $(SRCPATH)sprites.c  $(SRCPATH)sprites_utils.c\
+		 srcs/get_next_line.c srcs/get_next_line_utils.c
 OBJ = $(SRCS:.c=.o)
 NAME = cub3D
 LIBFT = libft.a

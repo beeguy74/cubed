@@ -1,9 +1,9 @@
 R 1300 760
-NO               ./greystone.xpm
-SO ./purplestone.xpm
-WE ./wood.xpm
-S ./barrel.xpm
-EA ./redbrick.xpm
+NO ./textures/greystone.xpm
+SO ./textures/purplestone.xpm
+WE ./textures/wood.xpm
+S ./textures/barrel.xpm
+EA ./textures/redbrick.xpm
 F 250,191,140
 C 90,25,170
 
