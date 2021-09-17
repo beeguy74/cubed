@@ -47,12 +47,12 @@ $(NAME): $(OBJ)
 clean:
 		rm -rf $(OBJ)
 		rm -rf $(LIBFT)
-		rm -rf $(MLX)
 		make clean -C $(LIBFT_DIR)
 		make clean -C $(MLX_DIR)
 
 fclean: clean
 		rm -rf $(NAME)
+		rm -rf $(MLX)
 		make fclean -C $(LIBFT_DIR)
 
 re: fclean all
